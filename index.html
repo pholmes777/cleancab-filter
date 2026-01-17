@@ -606,8 +606,8 @@ function init()
     selectDisplay = "";
 
     //testing lines
-    //activeLinks = "idleLinks";
-    activeLinks = "connectedLinks";
+    activeLinks = "idleLinks";
+    //activeLinks = "connectedLinks";
     // testing lines end
 
     calibrationHistory = new calibrationHistoryClass("calibration", "Commission");
@@ -616,9 +616,9 @@ function init()
 
     onDisconnected();
     // testing lines... removed \/
-    protocolVersion = 2;
-    bleiface.protocolVersionSet();
-    authorizeControl.setAuthorized(false);
+    //protocolVersion = 2;
+    //bleiface.protocolVersionSet();
+    //authorizeControl.setAuthorized(true);
     // testing lines end
     
     setTimeout(halfSecondTimer, 500);
@@ -1527,6 +1527,24 @@ const cCommissionSaveBtn = document.querySelector("#commissionSaveBtn");
 
 // Callback events
 
+function commissionBtnClick(action)
+{
+    var item = bleiface.getItem("Commission");
+    if (item)
+    {
+        item.commissionClicked(action);
+    }
+}
+
+function calBtnClicked(action)
+{
+    var item = bleiface.getItem("Commission");
+    if (item)
+    {
+        item.calibrationClicked(action);
+    }
+}
+
 commissionForm.addEventListener("submit", (event) => 
 {
     event.preventDefault();
@@ -1940,7 +1958,7 @@ class blueToothCommission extends blueToothIf
                 cCalStartBtn.disabled = true;
                 cCalFinishBtn.disabled = true;
                 
-                cCalibrateSetDivP2.style.display = "block";
+                cCalibrateSetDiv.style.display = "block";
             break;
         
             case 2:
