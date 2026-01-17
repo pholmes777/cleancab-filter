@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.003</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.005</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -479,7 +479,7 @@
           <div class="tooltip">?<span class="tooltiptext">Rate to accept new state</span></div>
         </div>
         <div class="col-50">
-          <input type="number" id="fupCount" min="1" max="60" placeholder="100" required="true">
+          <input type="number" id="fupCount" min="1" max="100" placeholder="60" required="true">
         </div>
         <div class="col-5">
           <label class="units"></label>
@@ -493,7 +493,7 @@
           <div class="tooltip">?<span class="tooltiptext">Rate to ignore current state</span></div>
         </div>
         <div class="col-50">
-          <input type="number" id="fdownCount" min="1" max="20" placeholder="100" required="true">
+          <input type="number" id="fdownCount" min="1" max="100" placeholder="20" required="true">
         </div>
         <div class="col-5">
           <label class="units"></label>
@@ -1464,7 +1464,7 @@ class blueToothTest extends blueToothIf
     {
         super.setRead(readValue);
 
-        testControl.processData(readValue);
+        //testControl.processData(readValue);
     }
     
     sendRequest(sendCmd, sendValue)
