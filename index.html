@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.001</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.002</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -3476,7 +3476,7 @@ function connectToBluetooth()
         menuDisabled=true;
         navigator.bluetooth.requestDevice({
             filters: [{name: 'FILTERMONITOR'}],
-            optionalServices: [bleiface.getServiceUUID(0), bleiface.getServiceUUID(1)]
+            optionalServices: [bleiface.getServiceUUID(0), bleiface.getServiceUUID(1), bleiface.getServiceUUID(2)]
         })
         .then(device => 
         {     
