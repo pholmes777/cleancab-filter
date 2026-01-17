@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.005</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.006</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -1464,7 +1464,7 @@ class blueToothTest extends blueToothIf
     {
         super.setRead(readValue);
 
-        //testControl.processData(readValue);
+        testControl.processData(readValue);
     }
     
     sendRequest(sendCmd, sendValue)
@@ -1488,7 +1488,7 @@ class blueToothTest extends blueToothIf
     
     run()
     {
-        testControl.handleActions(this);
+        //testControl.handleActions(this);
     }
 }
 //==========================================================
