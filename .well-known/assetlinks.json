@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "au.com.cleancab.app.twa",
+      "sha256_cert_fingerprints": ["42:DC:33:12:15:A0:EF:18:68:FD:B8:BC:45:CB:A1:2B:9B:27:89:F2:55:18:EB:06:63:F2:7C:7E:76:0C:12:E0"]
+    }
+  }
+]

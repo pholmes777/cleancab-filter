@@ -1,0 +1,33 @@
+{
+  "name": "CleanCab Filter Monitor",
+  "short_name": "CleanCab Filter",
+  "description": "Monitor and Configure your CleanCab Filter Monitor",
+  "id": "/cleancab-filter",
+  "start_url": "/cleancab-filter/index.html",
+  "display": "standalone",
+  "scope": "/cleancab-filter/",
+  "background_color": "#000000",
+  "theme_color": "#0f4a73",
+  "icons": [
+  {
+    "src": "app-images/appicon-144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  },
+  {
+    "src": "app-images/appicon-192.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  },
+  {
+    "src": "app-images/appicon-512.png",
+    "type": "image/png",
+    "sizes": "512x512"
+  },
+  {
+    "src": "app-images/appicon-256.png",
+    "type": "image/png",
+    "sizes": "256x256"
+  }
+  ]
+}

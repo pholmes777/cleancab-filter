@@ -1,0 +1,503 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+.switch 
+{
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input 
+{ 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider 
+{
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before 
+{
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider 
+{
+  background-color: #2196F3;
+}
+
+input:focus + .slider 
+{
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before 
+{
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round 
+{
+  border-radius: 34px;
+}
+
+.slider.round:before 
+{
+  border-radius: 50%;
+}
+  
+.row-progress
+{
+  color:#000;
+  background-color:#f1f1f1;
+  margin-top:6px;
+}
+.container-progress
+{
+  padding:4px 0px;
+  color:#000;
+  text-align: center;
+  background-color:#4CAF50;
+  height:24px;
+}
+
+.container-progress-alarm
+{
+  padding:4px 0px;
+  color:#000;
+  text-align: center;
+  background-color:#FF1919;
+  height:24px;
+}
+
+.container-progress-warning
+{
+  padding:4px 0px;
+  color:#000;
+  text-align: center;
+  background-color:#FFAE19;
+  height:24px;
+}
+
+.tooltip 
+{
+  position: relative;
+  display: inline-block;
+  padding: 6px 6px 6px 0;
+  color: black;
+}
+
+.tooltip .tooltiptext 
+{
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext 
+{
+  visibility: visible;
+}
+
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+  border: 1px solid #04AA6D;
+} 
+
+button:disabled,
+    button[disabled] {
+        background-color: grey;
+        color: white;
+        padding: 6px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: not-allowed;
+        float: right;
+        width: 100%;
+        border: 1px solid #04AA6D;
+    }
+    
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=password], select, textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=date], select, textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=number], select, textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=radio], select, textarea {
+  width: 30px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=button] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+  border: 1px solid #04AA6D;
+} 
+
+input[type=file] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+  border: 1px solid #04AA6D;
+} 
+
+input[type=button][disabled] {
+  background-color: grey;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+  border: 1px solid #04AA6D;
+} 
+
+input[type=file][disabled] {
+  background-color: grey;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 100%;
+  border: 1px solid #04AA6D;
+} 
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+p
+{
+  padding: 6px 6px 0 0;
+  color: white;
+  text-align: center;
+}
+
+label {
+  padding: 6px 6px 6px 0;
+  display: inline-block;
+  color: white;
+}
+
+.units 
+{
+    padding-left: 4px;
+}
+
+.pad-10-lr
+{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-15 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+}
+
+.col-40 {
+  float: left;
+  width: 40%;
+  margin-top: 6px;
+}
+
+.col-45 {
+  float: left;
+  width: 45%;
+  margin-top: 6px;
+}
+
+.col-35 {
+  float: left;
+  width: 35%;
+  margin-top: 6px;
+}
+
+.col-20 {
+  float: left;
+  width: 20%;
+  margin-top: 6px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-30 {
+  float: left;
+  width: 30%;
+  margin-top: 6px;
+}
+
+.col-5 {
+  float: left;
+  width: 5%;
+  margin-top: 6px;
+}
+
+.col-2 {
+  float: left;
+  width: 2%;
+  margin-top: 6px;
+}
+
+.col-10 {
+  float: left;
+  width: 10%;
+  margin-top: 6px;
+}
+
+.col-50 {
+  float: left;
+  width: 50%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+.col-60 {
+  float: left;
+  width: 60%;
+  margin-top: 6px;
+}
+
+.col-65 {
+  float: left;
+  width: 65%;
+  margin-top: 6px;
+}
+
+.col-70 {
+  float: left;
+  width: 70%;
+  margin-top: 6px;
+}
+
+.hiddenitemdiv {
+  padding-left:8px;
+  padding-right:8px;  
+  display:none;
+}
+
+.container {
+  background-color: #555;
+  padding: 5px 10px 15px 10px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 6px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.btn:disabled {
+  background-color: #777777;
+  opacity: 1;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+
+.grid-border
+{
+    border: 1px solid lightgrey;
+}
+
+.mobile-container {
+  max-width: 480px;
+  margin: auto;
+  background-color: #555;
+  height: 500px;
+  color: white;
+  border-radius: 10px;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  position: relative;
+}
+
+.topnav #idleLinks {
+  display: none;
+}
+
+.topnav #connectedLinks {
+  display: none;
+}
+
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+}
+
+.topnav a.icon {
+  background: black;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav .active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.topnav .active:hover {
+  background-color: #04AA6D;
+  color: white;
+}

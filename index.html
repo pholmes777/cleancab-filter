@@ -1,0 +1,3681 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CleanCab Filter App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styleph.css">
+    <link rel="manifest" href="manifest.json">
+    <!--link rel="stylesheet" type="text/css" href="static/styleph.css"-->
+    <!--link rel="manifest" href="static/manifest.json"-->
+  </head>
+  <body onload="init()">
+
+<!-- Simulate a smartphone / tablet -->
+<div class="mobile-containerx">
+
+<!-- Top Navigation Menu -->
+<div class="topnav">
+  <a href="javascript:showDiv('connectingDiv')" class="active">CleanCab Filter</a>
+  <div id="idleLinks">
+    <a href="javascript:connect()">Connect</a>
+    <a href="javascript:showDiv('contactDiv')">Contact</a>
+  </div>
+  
+  <div id="connectedLinks">
+    <a href="javascript:disconnect()">Disconnect</a>
+    <a id="menuItemLogin" href="javascript:showDiv('loginDiv')">Login</a>
+    <a href="javascript:showDiv('statusDiv')">Status</a>
+    <a href="javascript:showDiv('commissionDiv')">Commission</a>
+    <a href="javascript:showDiv('contactDiv')">Contact</a>
+  </div>
+  <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+    <i style="display:inline-block;font:normal normal normal 14px/1 FontAwesome;font-size:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale">
+    &#9776;   
+    </i>
+  </a>
+</div>
+
+<!--div id="debugDiv">
+  <div class="container">
+    <div class="row">
+      <p id="phdbg"></p>
+    </div>
+    <div class="row">
+        <input id="phdbgBtn" type="button" value="Clear" onclick="phdbgClear()" class="btn">
+    </div>
+  </div>
+</div-->
+   
+<div id="connectingDiv" class="hiddenitemdiv">
+  <h3>Connection</h3>
+  <div class="container">
+    <div class="row">
+        <p id="connectingVersion">Cleancab Filter App Version: 1.00</p>
+    </div>
+    <div class="row">
+      <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
+      <!--div style="width: 100%;height: 150px;background-image: url('static/cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;"-->
+      </div>
+    </div>
+    <div class="row">
+      <p id="connectingTicks"></p>
+      <p id="connectingState"></p>  
+    </div>
+  </div>
+</div>
+
+<div id="statusDiv" class="hiddenitemdiv">
+  <h3>Status</h3>
+  <div class="container">
+    <form>
+    <div class="row">
+      <div class="col-35">
+        <label>Pressure</label>
+      </div>
+      <div class="col-65">
+        <div class="row-progress">
+          <div id="sPressureBar" class="container-progress" style="width:1%">1pa</div>
+        </div>
+      </div>   
+    </div>  
+    <div class="row">
+      <div class="col-35">
+        <label>Status</label>
+      </div>
+      <div class="col-65">
+        <input type="text" id="sStatus" readonly value="unknown">
+      </div>
+    </div>  
+    </form>
+  </div>
+</div>  
+
+<div id="commissionDiv" class="hiddenitemdiv">
+  <h3>Commission</h3>
+  <div class="container">
+    <form id="commissionForm">
+      <div class="row">
+        <div class="col-25">
+          <label>Installed Date</label>
+        </div>
+        <div class="col-75">
+          <input type="date" id="cInstalledDate" readonly value="2024-02-18">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Company</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cInstallerCompany" maxlength="99" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Installed By</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cInstallerName" maxlength="99" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Contact</label>  
+        </div>
+        <div class="col-75">
+          <input type="text" id="cInstallerPhone" maxlength="19" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Machine Name</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cMachineName" maxlength="99" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Plant Number</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cPlantNumber" maxlength="29" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label>Plant Hours</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cPlantHours" maxlength="9" readonly value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+        </div>
+        <div class="col-30">
+        </div>
+        <div class="col-20">
+          <input id="commissionCancelBtn" type="button" value="Cancel" onclick="commissionBtnClick(0)" disabled="true">
+        </div>        
+        <div class="col-5">
+        </div>
+        <div class="col-20">
+          <input id="commissionSaveBtn" type="button" value="Update" onclick="commissionBtnClick(1)" disabled="true">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="calibrationHistoryDiv" class="hiddenitemdiv">
+  <h3>Calibration History</h3>
+  <div class="container">
+    <p id="calibrationHistorydbg"></p>
+    <div class="row">
+      <div class="col-30">
+        <button id="calibrationHistoryPrior" onclick="gotoCalibrationRec(-1)">Newer</button>
+      </div>
+      <div class="col-40 pad-10-lr">
+        <input type="text" id="calibrationHistoryPage" readonly value="1/8">
+      </div>
+      <div class="col-30 units">
+        <button id="calibrationHistoryNext" onclick="gotoCalibrationRec(1)">Older</button>
+      </div>
+    </div>
+    <div class="container"  id="calibrationHistoryDataDiv">
+    </div>
+    <div class="row">
+      <div class="col-70">
+      </div>
+      <div class="col-30 units">
+        <button id="calibrationHistorySave" onclick="saveCalibrationRecords()">Save to file</button>
+      </div>
+    </div>
+  </div> 
+</div>
+
+<div id="calibrateDiv" class="hiddenitemdiv">
+  <h3>Calibration Details</h3>
+  <div>
+    <div class="container">
+      <div class="row">
+        <p id="testResultsDbg"></p>
+      </div>       
+      <form id="calibrationUserForm">
+        <div class="row">
+          <div class="col-25">
+            <label>Date</label>
+          </div>
+          <div class="col-65">     
+            <input type="date" id="cCalibrationDate" readonly value="2024-02-18">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label>Company</label>
+          </div>
+          <div class="col-65">
+            <input type="text" id="cCalibrationCompany" maxlength="99" readonly value="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label>Name</label>
+          </div>
+          <div class="col-65">
+            <input type="text" id="cCalibrationName" maxlength="99" readonly value="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label>Contact</label>  
+          </div>
+          <div class="col-65">
+            <input type="text" id="cCalibrationPhone" maxlength="19" readonly value="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label></label>  
+          </div>          
+          <div class="col-20">
+            <input id="calStartBtn" type="button" value="Start" onclick="calBtnClicked(1)">
+          </div>
+          <div class="col-2">
+          </div>
+          <div class="col-20">
+            <input id="calCancelBtn" type="button" value="Cancel" onclick="calBtnClicked(0)" disabled="true">
+          </div>
+          <div class="col-2">
+          </div>
+          <div class="col-20">
+            <input id="calFinishBtn" type="button" value="Finish" onclick="calBtnClicked(2)" disabled="true">
+          </div>
+        </div>        
+      </form>
+    </div>
+  </div>
+  <div id="calibrateSetDiv" class="hiddenitemdiv">
+    <h3>Pressure Sensor</h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-25">
+          <label>Pressure Reading</label>
+        </div>
+        <div class="col-65">
+          <div class="row-progress">
+            <div id="testPressureBar" class="container-progress" style="width:1%">1%</div>
+          </div>
+        </div>
+      </div>
+      <form id="testPressureForm">
+        <div class="row">
+          <div class="col-25">
+            <label>Real Pressure</label>
+          </div>
+          <div class="col-65">
+            <input type="number" id="testRealPressure" min="0" max="300" value="0">
+          </div>
+          <div class="col-5">
+            <label class="units">pa</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+          </div>
+          <div class="col-65">
+            <input type="submit" value="Set Pressure" class="btn">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="firmwareDiv" class="hiddenitemdiv">
+  <h3>Firmware</h3>
+  <div class="container">
+    <form>
+      <div class="row">  
+        <div class="col-35">
+          <label>Current Version</label>
+        </div>        
+        <div class="col-65">
+          <input id="firmwareVersion" type='text' readOnly="true" value=""/>  
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-35">
+            <input id="firmwareInputFile" type='file' accept=".bin" style="visibility:hidden;" onchange="firmwareReadFile(event)"/>  
+        </div>
+        <div class="col-65">
+            <input id="firmwareChooseBtn" type="button" value="Select File" onclick="firmwareOpenFile()" class="btn"/>    
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-35">
+        </div>
+        <div class="col-65">
+          <label id="firmwareResult"></label>  
+        </div>
+      </div>
+    </form>
+    <div id="firmwareProgressDiv" class="hiddenitemdiv">     
+      <div class="row">
+        <div class="col-35">
+          <label>FileName</label>
+        </div>
+        <div class="col-65">
+          <input id="firmwareFileName" type='text' readOnly="true" value=""/>  
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-35">
+          <label>Progress</label>
+        </div>
+        <div class="col-65">
+          <div class="row-progress">
+            <div id="firmwareProgress" class="container-progress" style="width:1%">1%</div>
+          </div>
+        </div> 
+      </div>
+      <div class="row">
+        <div class="col-35">
+          <label>Transfered</label>
+        </div>
+        <div class="col-65">
+          <input id="firmwareTransfer" type='text' readOnly="true" value=""/>  
+        </div>
+      </div>      
+      <div class="row">
+        <div class="col-35">
+        </div>
+        <div class="col-65">
+          <input id="firmwareCancelBtn" type="button" value="Cancel" onclick="firmwareTransferCancel()" class="btn">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="contactDiv" class="hiddenitemdiv">   
+  <h3>Contact</h3>
+  <div class="container">
+    <div class="row">
+      <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
+      <!--div style="width: 100%;height: 150px;background-image: url('static/cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;"-->
+      </div>
+    </div>
+    <div class="row">
+      <p>Address :<a href="">3 Rose Smith Lane, Muckadilla QLD 4461</a></p>
+    </div>
+    <div class="row">
+      <p>Phone :<a href="tel:+427477740">0427 477 740</a></p>
+    </div>
+    <div class="row">
+      <p>Email :<a href="mailto:info@cleancab.au">info@cleancab.au</a></p>
+    </div>
+    <div class="row">
+      <p>Facebook :<a href="https://www.facebook.com/profile.php?id=61550062888002">CLEANCAB filtration system</a></p>
+    </div>    
+  </div>
+</div>
+            
+<div id="settingDiv" class="hiddenitemdiv">             
+  <h3>Settings</h3>
+  <div class="container">
+    <form id="settingForm">
+      <div class="row">  
+        <div class="col-40">
+          <label>Minimum Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Minimum pressure differential where filter is deemed ok</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fminPressure" min="1" max="200" placeholder="10" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>Maximum Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Maximum pressure differential where filter is deemed ok</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fmaxPressure" min="1" max="200" placeholder="40" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>No Filter Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Maximum pressure differential where filter is deemed to be not installed</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fnoFilterPressure" min="1" max="200" placeholder="5" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>Replace Filter Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Pressure differential where filter is almost clogged</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="freplacePressure" min="1" max="200" placeholder="35" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>Pressure sample rate</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">How often to sample the pressure</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fsampleRate" min="1" max="60" placeholder="2" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">sec</label>
+        </div>
+      </div>      
+      <div class="row">  
+        <div class="col-40">
+          <label>Pressure average</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">How often to sample the pressure</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fsampleAverage" min="1" max="50" placeholder="2" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units"></label>
+        </div>
+      </div>   
+      <div class="row">  
+        <div class="col-40">
+          <label>Up count rate</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Rate to accept new state</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fupCount" min="1" max="60" placeholder="100" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units"></label>
+        </div>
+      </div> 
+      <div class="row">  
+        <div class="col-40">
+          <label>Down count rate</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Rate to ignore current state</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fdownCount" min="1" max="20" placeholder="100" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units"></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-40">
+        </div>
+        <div class="col-5">
+        </div>
+        <div class="col-50">
+          <input id="settingSaveBtn" type="submit" value="Save Settings" class="btn">
+        </div>
+      </div>
+    </form> 
+  </div>
+</div>
+
+<div id="loginDiv" class="hiddenitemdiv">             
+  <h3 id="loginDivHeader">Login</h3>
+  <div class="container">
+    <div class="row">
+      <div class="col-35">
+      </div>
+      <div class="col-65">
+        <label id="loginDbg">Enter login password</label>
+      </div>
+    </div>
+    <div class="row" id="loginPasswordRow">
+      <div class="col-35">
+        <label>Password</label>
+      </div>
+      <div class="col-65">
+        <input id="loginPassword" type="password" value=""> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-35">
+      </div>
+      <div class="col-65">
+        <input id="loginBtn" type="button" value="Login" onclick="loginClicked()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End smartphone / tablet look -->
+</div>
+
+<script>
+
+//=====================================================
+//
+//      Service Worker
+//
+//=====================================================
+
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('source') === 'twa') {
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+  });
+}
+
+if ('serviceWorker' in navigator) 
+{
+  navigator.serviceWorker.register('serviceworker.js', {scope: '/cleancab-filter/'})
+    .then(function(registration) 
+    {
+        console.log('ServiceWorker registration successful!');
+    })
+    .catch(function(err) 
+    {
+        console.log('ServiceWorker registration failed: ', err);
+    });
+}
+
+//=====================================================
+//
+//      Initialization
+//
+//=====================================================
+
+//const phdbg = document.querySelector("#phdbg");
+//var phdbgc = 0;
+var menuDisabled=false;
+
+//function phdbgClear()
+//{
+//    phdbg.innerHTML = "";
+//}
+
+const DBG_INFO = 0;
+const DBG_CONNECT = 1;
+const DBG_DEBUG = 2;
+const DBG_ERROR = 3;
+
+
+const connectingState = document.querySelector("#connectingState");
+const connectingTicks = document.querySelector("#connectingTicks");
+
+var selectDisplay;
+var activeLinks;
+var authorizeControl;
+var calibrationHistory;
+var testControl
+
+function init()
+{
+    selectDisplay = "";
+
+    //testing lines
+    //activeLinks = "idleLinks";
+    activeLinks = "connectedLinks";
+    // testing lines end
+
+    calibrationHistory = new calibrationHistoryClass("calibration", "Commission");
+    authorizeControl = new authorizeClass();
+    testControl = new testClass();
+
+    onDisconnected();
+    // testing lines... removed \/
+    protocolVersion = 2;
+    bleiface.protocolVersionSet();
+    authorizeControl.setAuthorized(false);
+    // testing lines end
+    
+    setTimeout(halfSecondTimer, 500);
+}
+
+//=====================================================
+//
+//      Menu helper
+//
+//=====================================================
+
+function menuHide()
+{
+    var x = document.getElementById(activeLinks);
+    if (x)
+    {
+        x.style.display = "none";
+    }
+}
+
+function toggleMenu()
+{
+    if (!menuDisabled)
+    {
+        var x = document.getElementById(activeLinks);
+        if (x.style.display === "block")
+        {
+            x.style.display = "none";
+        }
+        else
+        {
+            x.style.display = "block";
+        }
+    }
+}
+
+function hideSelected()
+{
+    if (selectDisplay != "")
+    {
+        var x = document.getElementById(selectDisplay);
+
+        if (x)
+        {
+            x.style.display = "none";
+        }
+    }
+}
+
+function showSelected()
+{
+    if (selectDisplay != "")
+    {
+        var x = document.getElementById(selectDisplay);
+
+        if (x)
+        {
+            x.style.display = "block";
+        }
+        if (selectDisplay == "calibrationHistoryDiv")
+        {
+            if (calibrationHistory)
+            {
+                calibrationHistory.loadHistoryDiv(0);
+            }
+        }
+    }
+}
+
+function showDiv(divName)
+{
+    hideSelected();
+
+    selectDisplay = divName;
+
+    showSelected();
+    menuHide();
+}
+
+//===================================================
+//
+//      Helper functions
+//
+//===================================================
+
+function showDetailsDiv(frecId)
+{
+    element = document.getElementById(frecId);
+    if (element)
+    {
+        if (element.style.display === "none")
+        {
+            element.style.display = "block";
+        }
+        else
+        {
+            element.style.display = "none";
+        }
+    }
+}
+
+function pad2(num) 
+{
+    var s = "0" + num;
+    return s.substr(s.length - 2);
+}
+
+function setRadioInput(fieldName, selectValue)
+{
+    var radios = document.getElementsByName(fieldName);
+    for (var j = 0; j < radios.length; j++) 
+    {
+        if (radios[j].value == selectValue) 
+        {
+            radios[j].checked = true;
+            break;
+        }
+    }
+}
+
+function getRadioInput(fieldName)
+{
+  var radios = document.getElementsByName(fieldName);
+  for (var j = 0; j < radios.length; j++) 
+  {
+    if (radios[j].checked) 
+    {
+      return radios[j].value;
+    }
+  }
+  return 0;
+}
+
+function getNowDateForInput()
+{        
+    const date = new Date();
+        
+    thedate = date.getFullYear() + "-";
+        
+    let realMonth = date.getMonth() + 1;
+    if (realMonth < 10)
+    {
+        thedate += '0';
+    }
+    thedate += realMonth + '-';
+    if (date.getDate() < 10)
+    {
+        thedate += '0';
+    }
+    thedate += date.getDate();
+  
+    return thedate;
+}    
+
+function toHours(mins)
+{
+    var hours = mins / 60;
+    
+    return hours.toFixed(1);
+}
+
+//==========================================================
+//
+//          Log reader base class (aka History)
+//
+//==========================================================
+
+// Log helper functions
+
+function logDataValid(data)
+{
+    return data.getUint8(1) > 0;
+}   
+
+function logDataRecordNum(data)
+{
+    if (protocolVersion == 0)
+    {
+        return 0;
+    }
+    return data.getUint16(2, true);
+}   
+
+function logDataNumOfRecords(data)
+{
+    if (protocolVersion == 0)
+    {
+        return 0;
+    }
+    return data.getUint16(4, true);
+}   
+
+
+// Log data:
+//  Version 0:  id,valid,day,       month,     year,       hour,       min,sec,...
+//  Version 1:  id,valid,rec num lo,rec num hi,num recs lo,num recs hi,day,month,year
+
+function logDataDate(data)
+{
+    let offset = (protocolVersion == 0) ? 2 : 6;            
+    
+    let theDay = pad2(data.getUint8(offset + 0));
+    let theMonth = pad2(data.getUint8(offset + 1));
+    let theYear = "20" + pad2(data.getUint8(offset + 2));   
+    
+    let theDate = theYear + "-" + theMonth + "-" + theDay;
+    
+    return theDate;
+}
+
+function logDataTime(data)
+{
+    let offset = (protocolVersion == 0) ? 5 : 9;
+
+    let theHour = pad2(data.getUint8(offset + 0));   
+    let theMinute = pad2(data.getUint8(offset + 1));
+    let theSecond = pad2(data.getUint8(offset + 2));
+    
+    let theTime = theHour + ":" + theMinute + ":" + theSecond;
+    
+    return theTime;
+}
+
+// Log base class
+
+class historyClass
+{
+    constructor(historyName, blename)
+    {
+        this.elementDbg = document.getElementById(historyName + "Historydbg");
+        this.elementDataDiv = document.getElementById(historyName + "HistoryDataDiv");
+        this.elementPrior = document.getElementById(historyName + "HistoryPrior");
+        this.elementNext = document.getElementById(historyName + "HistoryNext");
+        this.elementPage = document.getElementById(historyName + "HistoryPage");
+        this.elementSave = document.getElementById(historyName + "HistorySave");
+        this.fileData = "";
+        this.top = 0;
+        this.count = 0;
+        this.numRecords = 0;
+        this.blename = blename;
+        this.fileName = historyName + "-history.txt";
+        this.name = historyName;
+        this.id = 0;
+        this.exporting = false;
+        this.readState = 0;
+    }
+    
+    setExportFileHeader()
+    {
+        this.fileData = "";
+    }
+    
+    exportRecords()
+    {
+        bleiface.setMessage(DBG_INFO, "History " + this.name + ": Start Export");
+        this.elementDbg.innerHTML = "Exporting data...";
+
+        this.elementNext.disabled = true;    
+        this.elementPrior.disabled = true;
+        this.elementSave.disabled = true;
+
+        this.exporting = true;
+        this.readState = 1;
+
+        this.setExportFileHeader();
+    
+        this.count = 2;     // actually a retry count
+    }
+
+    loadHistoryDiv(thePage)
+    {
+        bleiface.setMessage(DBG_INFO, "History " + this.name + ": Start Loading Page");
+        this.elementDbg.innerHTML = "Loading data...";
+
+        this.elementNext.disabled = true;    
+        this.elementPrior.disabled = true;
+        this.elementSave.disabled = true;
+    
+        while (this.elementDataDiv.firstChild) 
+        {
+            this.elementDataDiv.removeChild(this.elementDataDiv.firstChild);
+        }  
+
+        this.exporting = false;
+        this.readState = 1;
+
+        this.top = thePage;
+        this.count = 10;
+        this.numRecords = 0;
+    }
+
+    handleHistoryLoading()
+    {
+        let result = false;
+
+        if (this.readState > 0)
+        {
+            let item = bleiface.getItem(this.blename);
+            if (item)
+            {
+                bleiface.setMessage(DBG_INFO, "History " + this.name + ": State: " + this.readState);
+                
+                switch (this.readState)
+                {
+                    case 1:
+                        // perform a Start command
+
+                        if (this.exporting)
+                        {
+                            item.setReadRecord(3);
+                        }
+                        else
+                        {
+                            item.setGotoRecord(0, this.top + 9);    
+                        }
+                        this.id = item.getId();
+                
+                        result = true;
+        
+                        this.readState = 2;
+                    break;
+                    
+                    case 2:
+                        // performing the first read after a GOTO record request or a get First record request
+        
+                        result = true;
+                        this.readState = 1;                   // if we fail then go back to sending the GOTO request
+            
+                        bleiface.itemReadWithBusy(item);
+                    break;
+            
+                    case 3:
+                        // the first record after the GOTO had been read, so keep reading until the end
+        
+                        if (this.count > 0)
+                        {
+                            this.count--;
+                            result = true;
+                    
+                            this.readNext(item);
+                        }
+                        else
+                        {
+                            this.readDone();
+                        }
+                    break;
+                }
+            }
+            else
+            {
+                this.readState = 0;
+            }
+        }
+        return result;
+    }
+
+    readNext(item)
+    {
+        bleiface.itemReadWithBusy(item);
+    }
+    
+    readDone()
+    {
+        bleiface.setMessage(DBG_INFO, "History " + this.name + ": Finished");
+    
+        if (this.exporting)
+        {
+            var tempLink = document.createElement("a");
+            var taBlob = new Blob([this.fileData], {type: 'text/plain'});
+            tempLink.setAttribute('href', URL.createObjectURL(taBlob));
+            tempLink.setAttribute('download', this.fileName);
+            tempLink.click();
+  
+            URL.revokeObjectURL(tempLink.href);
+            this.fileData = "";
+        }
+   
+        if (this.numRecords == 0)
+        {
+            this.elementDbg.innerHTML = "No records found";
+        }
+        else
+        {
+            this.elementDbg.innerHTML = "";
+        }
+
+        this.elementNext.disabled = (this.top + 10) >= this.numRecords;;    
+        this.elementPrior.disabled = this.top == 0;
+        this.elementPage.value = this.top + "/" + this.numRecords;
+        this.elementSave.disabled = false;
+    
+        this.exporting = false;
+        this.readState = 0;
+    }    
+    
+    addRowElement(element, theLabel, theValue)
+    {
+        var rowDiv = document.createElement("div");
+        var labelDiv = document.createElement("div");
+        var valueDiv = document.createElement("div");
+    
+        rowDiv.setAttribute("class", "row");
+        labelDiv.setAttribute("class", "col-35");
+        valueDiv.setAttribute("class", "col-65");
+        labelDiv.innerHTML = "<label>" + theLabel + "</label>";
+        valueDiv.innerHTML = "<input type='text' readonly value='" + theValue + "'>";
+    
+        rowDiv.appendChild(labelDiv);
+        rowDiv.appendChild(valueDiv);
+    
+        element.appendChild(rowDiv);
+    }            
+
+    dataValid(data)
+    {
+        return false;
+    }
+    
+    dataRecordNumber(data)
+    {
+        return 0;
+    }
+    
+    dataNumOfRecords(data)
+    {
+        return 0;
+    }
+    
+    dataAddToFileData(data)
+    {
+    }
+    
+    dataAddDetailElements(detailsDiv, data)
+    {
+    }
+    
+    dataDate(data)
+    {
+        return "";
+    }
+    
+    dataRecordType(data)
+    {
+        return "";
+    }
+    
+    handleRecordRead(id, data)
+    {   
+        if (this.id == id &&
+            this.readState > 0)
+        {
+            bleiface.setMessage(DBG_INFO, "History " + this.name + ": Received. Len=" + data.length + ", state=" + this.readState);
+
+            if (this.readState == 1)
+            {
+                this.readState = 3;
+            }
+        
+            if (this.readState == 3)
+            {
+                if (this.exporting)
+                {
+                    this.count = 2;
+                    if (this.dataValid(data))
+                    {
+                        this.elementDbg.innerHTML = "Exporting data ... Record " + this.dataRecordNumber(data);
+           
+                        this.dataAddToFileData(data);                                           
+                    }
+                    else
+                    {
+                        this.readDone();
+                    }
+                }
+                else
+                {
+                    // need to add the record
+
+                    if (this.dataValid(data))
+                    {
+                        this.elementDbg.innerHTML = "Loading data ... Record " + this.dataRecordNumber(data);
+            
+                        this.numRecords = this.dataNumOfRecords(data);
+            
+                        // Add a new element.
+            
+                        var rowDiv = document.createElement("div");
+                        var dateDiv = document.createElement("div");
+                        var typeDiv = document.createElement("div");
+                        var btnDiv = document.createElement("div");
+            
+                        var frecId = "frec" + this.name + "Id" + this.dataRecordNumber(data);
+            
+                        rowDiv.setAttribute("class", "row");
+                        dateDiv.setAttribute("class", "col-30");
+                        typeDiv.setAttribute("class", "col-40 units");
+                        btnDiv.setAttribute("class", "col-30 units");
+                        dateDiv.innerHTML = "<input type='text' readonly value='" + this.dataDate(data) + "' title='" + this.dataDate(data) + "'>";
+                        typeDiv.innerHTML = "<input type='text' readonly value='" + this.dataRecordType(data) + "'>";
+                        btnDiv.innerHTML = "<input type='button' value='Details...' onclick=" + '"' + "showDetailsDiv('" + frecId + "')" + '"' + ">";
+            
+                        rowDiv.appendChild(dateDiv);
+                        rowDiv.appendChild(typeDiv);
+                        rowDiv.appendChild(btnDiv);
+
+                        if (this.elementDataDiv.firstChild)
+                        {
+                            this.elementDataDiv.insertBefore(rowDiv, this.elementDataDiv.firstChild);
+                        }
+                        else
+                        {
+                            this.elementDataDiv.appendChild(rowDiv);
+                        }
+
+                        var detailsDiv = document.createElement("div");
+            
+                        detailsDiv.setAttribute("class", "container hiddenitemdiv");
+                        detailsDiv.setAttribute("id", frecId);
+                
+                        this.dataAddDetailElements(detailsDiv, data);
+            
+                        rowDiv.appendChild(detailsDiv);
+            
+                        detailsDiv.style.display = "none";
+            
+                        if (this.dataRecordNumber(data) == this.top)
+                        {
+                            this.readDone();
+                        }
+                    }
+                    else
+                    {
+                        // not valid so finished reading
+           
+                        this.readDone();           
+                    }
+                }
+            }
+        }
+    }  
+
+    gotoRecord(rec)
+    {
+        bleiface.setMessage(DBG_INFO, "History " + this.name + ": Goto " + rec);    
+        
+        if (rec < 0)
+        {
+            if (this.top > 10)
+            {
+                this.top -= 10;
+            }
+            else
+            {
+                this.top = 0;
+            }
+        }
+        else
+        {
+            this.top += 10;
+            if (this.top >= this.numRecords)
+            {
+                this.top -= 10;
+                if (this.top < 0)
+                {
+                    this.top = 0;
+                }
+            }
+        }
+        this.loadHistoryDiv(this.top)
+    }
+}
+
+//===================================================
+//
+//      Bluetooth Characteristic base class
+//
+//===================================================
+
+class blueToothIf
+{
+    constructor(itemName, serviceIdx, characteristicUUID)
+    {
+        this.name = itemName;
+        this.serviceIdx = serviceIdx;
+        this.characteristicUUID = characteristicUUID.toLowerCase();
+        this.characteristic = null;
+        this.validIsValid = false;
+        this.connectState = 0;          // 0 = idle, 1 = connecting, 2 = connected, 3 = failed
+        this.readValue = null;
+        this.initState = 0;
+        this.runState = 0;
+    }
+    
+    getName()
+    {
+        return this.name;
+    }
+    
+    disconnected()
+    {
+        this.characteristic = null;
+        this.readValue = null;
+        this.validIsValid = false;
+        this.connectState = 0;
+        this.initState = 0;
+    }
+    
+    start()
+    {
+        this.connectState = 1;
+    }
+
+    done()
+    {
+        this.connectState = 2;
+    }
+
+    failed()
+    {
+        this.connectState = 3;
+    }
+    
+    setCharactistic(characteristic)
+    {
+        this.characteristic = characteristic;
+        this.done();
+    }
+    
+    connect(service)
+    {
+        this.characteristic = null;
+        this.readValue = null;
+        this.validIsValid = false;
+        this.connectState = 1;
+        
+        return service[this.serviceIdx].getCharacteristic(this.characteristicUUID);
+    }
+
+    protocolVersionSet()
+    {
+
+    }
+
+    isConnected()
+    {
+        return this.connectState == 2;
+    }
+
+    isConnecting()
+    {
+        return this.connectState == 1;
+    }
+
+    isConnectFailed()
+    {
+        return this.connectState == 3;
+    }
+
+    isNotConnect()
+    {
+        return this.connectState == 0 || this.connectState == 3;
+    }
+    
+    isValueValid()
+    {
+        return this.isConnected() && this.validIsValid;
+    }
+    
+    getValue()
+    {
+        return this.readValue;
+    }
+    
+    setRead(readValue)
+    {
+        this.validIsValid = true;
+        this.readValue = readValue;
+    }
+    
+    read()
+    {
+        this.validIsValid = false;
+        this.readValue = null;
+        
+        return this.characteristic.readValue();
+    }
+    
+    write(data)
+    {
+        bleiface.setBusy(this.getName);
+        this.characteristic.writeValueWithResponse(data)
+            .then (cdata =>
+            {
+                bleiface.clearBusy();
+                return true;
+            })
+            .catch (error =>
+            {
+                bleiface.setError("Error:Write: " + error);
+            });
+    }
+
+    init()
+    {
+        this.initState = 9999;
+    }
+    
+    isInit()
+    {
+        return this.initState == 9999;
+    }
+    
+    run()
+    {
+    }
+};
+
+//==========================================================
+//
+//          Test Switch
+//
+//==========================================================
+
+// Variables
+
+var testPressureForm = document.querySelector("#testPressureForm");
+
+testPressureForm.addEventListener("submit", (event) => 
+{
+    event.preventDefault();
+
+    testControl.executeSetCalibrate(1);
+});
+
+class testClass
+{
+    constructor()
+    {
+        this.elementPressureBar = document.getElementById("testPressureBar");
+        this.elementDbg = document.getElementById("testResultsDbg");
+        this.elementRealPressure = document.getElementById("testRealPressure");
+        
+        this.pressure = 0;
+        
+        this.send_req = false;
+        this.send_cmd = 0;
+        this.send_value = 0;
+        this.timer = 0;
+    }
+
+    tick()
+    {
+        if (this.timer > 0)
+        {
+            this.timer--;
+            if (this.timer == 0)
+            {
+                this.elementDbg.innerHTML = "";
+                this.elementLogDbg.innerHTML = "";
+            }
+        }
+    }
+    
+    restart()
+    {
+        this.pressure = 0;
+        
+        this.elementPressureBar.style.width = '0%';
+        this.elementPressureBar.innerHTML = "0";   
+
+        this.send_req = false;
+    }
+
+    processData(data)
+    {
+        this.pressure = data.getInt16(1, true);
+
+        let temp1 = (((this.pressure * 100) + 0.5) / 500 >> 0);
+        if (temp1 > 100)
+        {
+            temp1 = 100;
+        }
+        if (temp1 < 0)
+        {
+            temp1 = 0;
+        }
+        this.elementPressureBar.style.width = temp + '%';
+        this.elementPressureBar.innerHTML = this.pressure;
+    }   
+
+    executeSetCalibrate(theIdx)
+    { 
+        this.send_req = false;
+        
+        this.send_cmd = 1 + theIdx;
+        if (theIdx == 1)
+        {
+            this.send_value = this.elementRealPressure.value;     
+        }
+        this.send_req = true;
+        
+        bleiface.setMessage(DBG_INFO, "Sending calibrate: Cmd=" + this.send_cmd + ", Value=" + this.send_value);
+        
+        var item = bleiface.getItem("Commission");
+        if (item)
+        {        
+            item.calibrationChanged();
+        }
+    }
+    
+    handleActions(item)
+    {
+        if (this.send_req)
+        {
+            this.send_req = false;
+            
+            item.sendRequest(this.send_cmd, this.send_value);
+
+            return true;
+        }
+        
+        if (selectDisplay === "calibrateDiv")
+        {
+            bleiface.itemReadWithBusy(item);
+
+            return true;
+        }
+        return false;
+    }    
+}
+
+// Bluetooth interface
+
+class blueToothTest extends blueToothIf
+{
+    constructor ()
+    {
+        super ("Test", 0, "546a7403-ec5b-461b-9cce-b9bce932a72c");
+        this.send = false;
+    }
+  
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+
+        testControl.processData(readValue);
+    }
+    
+    sendRequest(sendCmd, sendValue)
+    {
+        let data = new Uint8Array(3);
+            
+        data[0] = sendCmd;
+        data[1] = sendValue & 0x00ff;
+        data[2] = (sendValue >> 8) & 0x00ff;
+        
+        this.write(data);
+    }
+    
+    init()
+    {
+        if (this.initState == 0)
+        {
+            super.init();
+        }
+    }
+    
+    run()
+    {
+        testControl.handleActions(this);
+    }
+}
+//==========================================================
+//
+//          Commission
+//
+//==========================================================
+
+// variables
+
+var   commissionDataValid = false;
+const commissionForm = document.querySelector("#commissionForm");
+const cInstalledDate = document.querySelector("#cInstalledDate");
+const cInstallerCompany = document.querySelector("#cInstallerCompany");
+const cInstallerName = document.querySelector("#cInstallerName");
+const cInstallerPhone = document.querySelector("#cInstallerPhone");
+const cMachineName = document.querySelector("#cMachineName");
+const cPlantNumber = document.querySelector("#cPlantNumber");
+const cPlantHours = document.querySelector("#cPlantHours");
+const cSaveRow = document.querySelector("#cSaveRow");
+
+const cCalibrateDiv = document.querySelector("#calibrateDiv");
+const cCalibrationDate = document.querySelector("#cCalibrationDate");
+const cCalibrationCompany = document.querySelector("#cCalibrationCompany");
+const cCalibrationName = document.querySelector("#cCalibrationName");
+const cCalibrationPhone = document.querySelector("#cCalibrationPhone");
+
+const cCalibrateSetDiv = document.querySelector("#calibrateSetDiv");
+
+const cCalStartBtn = document.querySelector("#calStartBtn");
+const cCalCancelBtn = document.querySelector("#calCancelBtn");
+const cCalFinishBtn = document.querySelector("#calFinishBtn");
+
+const cCommissionCancelBtn = document.querySelector("#commissionCancelBtn");
+const cCommissionSaveBtn = document.querySelector("#commissionSaveBtn");
+
+// Callback events
+
+commissionForm.addEventListener("submit", (event) => 
+{
+    event.preventDefault();
+  
+    var cdata = cInstalledDate.value + "|" +
+                cInstallerName.value + "|" +
+                cInstallerPhone.value + "|" +
+                cInstallerCompany.value + "|" +
+                cMachineName.value + "|" +
+                cPlantNumber.value + '|' +
+                cPlantHours.value;
+
+    var item = bleiface.getItem("Commission");
+    if (item)
+    {
+        item.setCommission(cdata);
+    }
+});
+
+// helper functions
+
+function authorizeCalibration()
+{
+    var item = bleiface.getItem("Commission");
+    if (item)
+    {        
+        item.setEnableCalibration();
+    }
+}
+
+function authorizeCommission()
+{
+    var item = bleiface.getItem("Commission");
+    if (item)
+    {        
+        item.setEnableCommission();
+    }
+}
+
+function gotoCalibrationRec(recDir)
+{
+    if (calibrationHistory)
+    {
+        calibrationHistory.gotoRecord(recDir);
+    }
+}
+
+function saveCalibrationRecords()
+{
+    if (calibrationHistory)
+    {
+        calibrationHistory.exportRecords();
+    }
+}
+
+class calibrationHistoryClass extends historyClass
+{   
+    readNext(item)
+    {
+        // need to send a command first, so go back to waiting
+        // for the command to be sent              
+        
+        if (item.requestNextCalRecord())
+        {
+            this.readState = 2;
+        }
+        else
+        {
+            this.readDone();
+        }
+    }
+    
+    setNumRecs(recs)
+    {
+        this.savedNumRecs = recs;
+    }
+    
+    setRec(id)
+    {
+        this.savedRec = id;
+    }
+    
+    doDecode(data)
+    {
+        return data.split("|");
+    }
+    
+    setExportFileHeader()
+    {
+        this.fileData = "Date,Company,Name,Phone\r\n";
+    }
+
+    dataValid(data)
+    {
+        return this.doDecode(data).length >= 6;
+    }
+    
+    dataRecordNumber(data)
+    {
+        if (this.savedRec)        
+        {
+            return this.savedRec;
+        }
+        return 0;
+    }
+    
+    dataNumOfRecords(data)
+    {
+        if (this.savedNumRecs)
+        {
+            return this.savedNumRecs;
+        }
+        return 0;
+    }
+    
+    dataAddToFileData(data)
+    {
+        const myArray = this.doDecode(data);
+        
+        this.fileData  += this.dataDate(data) + "," +
+                          this.dataRecordType(data) + "," +
+                          myArray[4] + "," +
+                          myArray[5] + "\r\n";                                     
+    }
+    
+    dataAddDetailElements(detailsDiv, data)
+    {               
+        const myArray = this.doDecode(data);
+        
+        this.addRowElement(detailsDiv, "Name", myArray[4]);
+        this.addRowElement(detailsDiv, "Contact", myArray[5]);
+    }
+    
+    dataDate(data)
+    {
+        const myDate = this.doDecode(data)[2].split("-");
+        
+        if (myDate.length >= 3)
+        {
+            return myDate[2] + "-" + myDate[1] + "-" + myDate[0];
+        }
+        return "01-01-2000";
+    }
+    
+    dataRecordType(data)
+    {
+        return this.doDecode(data)[3]; // the company
+    }
+}
+
+// bluetooth interface class
+
+class blueToothCommission extends blueToothIf
+{
+    constructor ()
+    {
+        super ("Commission", 0, "f31e7402-7729-4073-8319-a0a2f33524ed");
+        
+        this.send = false;
+        this.sendCal = false;
+        this.sendValue = "";
+        this.calibrateMenuItem = 0;
+        this.calibrateHistoryMenuItem = 0;
+        this.elementMenuItem = document.getElementById("menuItemLogin");
+        this.allowCalibration = false;
+        this.allowCommission = false;
+        
+        this.savedCalibrationName = "";
+        this.savedCalibrationPhone = "";
+        this.savedCalibrationCompany = "";
+        this.savedCalibrationDate = "";
+        
+        this.savedInstalledDate = "";
+        this.savedInstallerName = "";
+        this.savedInstallerPhone = "";
+        this.savedInstallerCompany = "";
+        this.savedMachineName = "";
+        this.savedPlantNumber = "";
+        this.savedPlantHours = "";
+        
+        this.commissionDataValid = false;
+        
+        this.sendCalQuery = false;
+        this.readCalResponse = false;
+        
+        this.currentCalibrationIdx = 0;
+        this.calReadId = 0;
+        this.calNumRecs = 0;
+    }
+        
+    disconnected()
+    {
+        super.disconnected();
+        
+        this.commissionDataValid = false;
+        this.send = false;
+        this.sendCal = false;
+        this.sendCalQuery = false;
+        this.readCalResponse = false;
+        if (this.calibrateMenuItem)
+        {
+            this.calibrateMenuItem.remove();
+            this.calibrateMenuItem = 0;
+        }
+        if (this.calibrateHistoryMenuItem)
+        {
+            this.calibrateHistoryMenuItem.remove();
+            this.calibrateHistoryMenuItem = 0;
+        }
+    }
+    
+    setCommission(commissionData)
+    {
+        this.sendCal = false;
+        this.sendValue = commissionData;
+        this.send = true;
+    }
+    
+    protocolVersionSet()
+    {
+        super.protocolVersionSet();
+        if (!this.calibrateMenuItem)
+        {
+            this.calibrateMenuItem = document.createElement("a");
+            this.calibrateMenuItem.setAttribute("href", "javascript:showDiv('calibrateDiv')");
+            this.calibrateMenuItem.innerHTML = "Calibrate";
+                
+            this.elementMenuItem.parentNode.insertBefore(this.calibrateMenuItem, this.elementMenuItem.nextSibling); 
+        }
+        if (!this.calibrateHistoryMenuItem)
+        {
+            this.calibrateHistoryMenuItem = document.createElement("a");
+            this.calibrateHistoryMenuItem.setAttribute("href", "javascript:showDiv('calibrationHistoryDiv')");
+            this.calibrateHistoryMenuItem.innerHTML = "Calibrate History";
+                
+            this.elementMenuItem.parentNode.insertBefore(this.calibrateHistoryMenuItem, this.elementMenuItem.nextSibling);
+        }
+    }
+    
+    commissionClicked(action)
+    {
+        var allowed = false;
+        
+        if (action == 0)
+        {
+            // cancel button clicked
+        
+            cCommissionCancelBtn.disabled = true;
+            cCommissionSaveBtn.disabled = !(this.allowCommission | !this.commissionDataValid);
+            cCommissionSaveBtn.value = "Update";
+            
+            cInstalledDate.value = this.savedInstalledDate;
+            cInstallerName.value = this.savedInstallerName;
+            cInstallerPhone.value = this.savedInstallerPhone;
+            cInstallerCompany.value = this.savedInstallerCompany;
+            cMachineName.value = this.savedMachineName;
+            cPlantNumber.value = this.savedPlantNumber;
+            cPlantHours.value = this.savedPlantHours;                
+        }
+        else if (action == 1)
+        {
+            // save or update button clicked
+        
+            if (cCommissionSaveBtn.value === "Save")
+            {
+                this.sendCal = false;
+                this.sendValue = cInstalledDate.value + "|" +
+                cInstallerName.value + "|" +
+                cInstallerPhone.value + "|" +
+                cInstallerCompany.value + "|" +
+                cMachineName.value + "|" +
+                cPlantNumber.value + '|' +
+                cPlantHours.value;
+                this.send = true;
+                
+                this.savedInstalledDate = cInstalledDate.value;
+                this.savedInstallerName = cInstallerName.value;
+                this.savedInstallerPhone = cInstallerPhone.value;
+                this.savedInstallerCompany = cInstallerCompany.value;
+                this.savedMachineName = cMachineName.value;
+                this.savedPlantNumber = cPlantNumber.value;
+                this.savedPlantHours = cPlantHours.value;
+            
+                this.commissionDataValid =  true;
+                
+                cCommissionSaveBtn.value = "Update";
+                cCommissionCancelBtn.disabled = true;
+                cCommissionSaveBtn.disabled = !(this.allowCommission | !this.commissionDataValid);
+            }
+            else
+            {
+                // start Update
+            
+                cCommissionSaveBtn.value = "Save";
+                cCommissionCancelBtn.disabled = false;
+                
+                cInstalledDate.value = getNowDateForInput();
+                
+                allowed = true;
+            }
+        }
+        cInstallerName.readOnly = !allowed;
+        cInstallerPhone.readOnly = !allowed;
+        cInstallerCompany.readOnly = !allowed;
+        cMachineName.readOnly = !allowed;
+        cPlantNumber.readOnly = !allowed;
+        cPlantHours.readOnly = !allowed;
+    }
+    
+    setEnableCommission()
+    {
+        this.allowCommission = false;
+        if (authorizeControl &&
+            authorizeControl.getAuthorized())
+        {
+            this.allowCommission = true;
+        }
+        if (this.allowCommission || !this.commissionDataValid)
+        {
+            cCommissionSaveBtn.disabled = false;
+        }
+        else
+        {
+            if (!cCommissionCancelBtn.disabled)
+            {
+                commissionClicked(0);
+            }
+        }
+    }
+
+    setEnableCalibration()
+    {
+        this.allowCalibration = false;
+        
+        if (authorizeControl &&
+            authorizeControl.getAuthorized())
+        {
+            this.allowCalibration = true;
+        }
+        
+        if (this.allowCalibration)
+        {
+            if (cCalStartBtn.disabled &&
+                cCalCancelBtn.disabled &&
+                cCalFinishBtn.disabled)
+            {
+                // enable the calibration start button
+                
+                cCalStartBtn.disabled = false;
+            }
+        }
+        else
+        {
+            if (!cCalStartBtn.disabled)
+            {
+                // calibration not started so just disable it
+                
+                cCalStartBtn.disabled = true;
+            }
+            else
+            {
+                if (!cCalCancelBtn.disabled)
+                {
+                    // calibration can still be canceled
+                    
+                    calibrationClicked(0);
+                }
+                else
+                {
+                    // don't do anything they are calibrating still.
+                }
+            }
+        }
+    }
+    
+    calibrationChanged()
+    {
+        if (!cCalCancelBtn.disabled)
+        {
+            cCalCancelBtn.disabled = true;
+            cCalFinishBtn.disabled = false;
+        }
+    }
+    
+    calibrationClicked(action)
+    {
+        switch(action)
+        {
+            case 0:     // cancel calibration
+                // need to restore the old Value
+            
+                cCalStartBtn.disabled = !this.allowCalibration;
+                cCalCancelBtn.disabled = true;
+                cCalFinishBtn.disabled = true;
+                cCalibrateSetDiv.style.display = "none";
+                cCalibrationName.value = this.savedCalibrationName;
+                cCalibrationPhone.value = this.savedCalibrationPhone;
+                cCalibrationCompany.value = this.savedCalibrationCompany;
+                cCalibrationDate.value = this.savedCalibrationDate;
+            break;
+        
+            case 1:
+                // start the calibration process
+                
+                cCalibrationDate.value = getNowDateForInput();
+                cCalibrationName.readOnly = false;
+                cCalibrationPhone.readOnly = false;
+                cCalibrationCompany.readOnly = false;
+                
+                cCalCancelBtn.disabled = false;
+                cCalStartBtn.disabled = true;
+                cCalFinishBtn.disabled = true;
+                
+                cCalibrateSetDivP2.style.display = "block";
+            break;
+        
+            case 2:
+                // calibration done
+
+                this.savedCalibrationCompany = cCalibrationCompany.value;
+                this.savedCalibrationName = cCalibrationName.value;
+                this.savedCalibrationPhone = cCalibrationPhone.value;
+                this.savedCalibrationDate = cCalibrationDate.value;
+
+                this.sendCal = true;
+                this.sendValue = cCalibrationDate.value + "|" +
+                    cCalibrationCompany.value + "|" +
+                    cCalibrationName.value + "|" +
+                    cCalibrationPhone.value;
+                this.send = true;
+        
+                cCalibrateSetDiv.style.display = "none";   
+
+                cCalStartBtn.disabled = !this.allowCalibration;      
+                cCalFinishBtn.disabled = true;  
+                cCalCancelBtn.disabled = true;                
+            break;
+        }
+    }
+    
+    getId()
+    {
+        return 0;
+    }
+    
+    requestNextCalRecord()
+    {    
+        if (this.calReadId > 0)
+        {
+            this.calReadId--;
+                    
+            var nextId;
+
+            if (this.currentCalibrationIdx > 0)
+            {
+                nextId = 10 + this.currentCalibrationIdx + this.calReadId;
+            }
+            else
+            {
+                // dummy read as calibration is empty-cells
+                
+                nextId = 11;    
+            }
+            if (nextId > 18)
+            {
+                nextId -= 8;
+            }
+            this.retries = 0;
+            
+            this.send = true;
+            this.sendValue = nextId.toString();
+                    
+            return true;
+        }
+        return false;
+    }
+    
+    setReadRecord(rec)
+    {  
+        if (rec == 3)
+        {
+            if (this.currentCalibrationIdx != 0)
+            {
+                bleiface.setMessage(DBG_INFO, this.getName() + " Start Read from back");
+                        
+                this.calReadId = 8;                            
+            }
+            else
+            {
+                bleiface.setMessage(DBG_INFO, this.getName() + " No valid records");
+                this.calReadId = 1;
+            }
+            this.calNumRecs = 0;
+            this.requestNextCalRecord();
+        }
+    }
+
+    setGotoRecord(cmd, rec)
+    {
+        // there are only 8 records so it fits on a page, so always just read all
+        
+        this.setReadRecord(3);
+    }    
+    
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+    
+        const decodedValue = new TextDecoder().decode(readValue);
+
+        const myArray = decodedValue.split("|");
+    
+        if (myArray.length >= 8)
+        {
+            cInstalledDate.value = myArray[1];
+            cInstallerName.value = myArray[2];
+            cInstallerPhone.value = myArray[3];
+            cInstallerCompany.value = myArray[4];
+            cMachineName.value = myArray[5];
+            cPlantNumber.value = myArray[6];
+            cPlantHours.value = myArray[7];
+            
+            this.savedInstalledDate = cInstalledDate.value;
+            this.savedInstallerName = cInstallerName.value;
+            this.savedInstallerPhone = cInstallerPhone.value;
+            this.savedInstallerCompany = cInstallerCompany.value;
+            this.savedMachineName = cMachineName.value;
+            this.savedPlantNumber = cPlantNumber.value;
+            this.savedPlantHours = cPlantHours.value;            
+
+            this.commissionDataValid = (myArray[0] === "V");    
+        }        
+        else
+        {
+            if (myArray.length == 1)
+            {
+                // Cw   is value was written
+            }
+            else if (myArray.length >= 2 &&
+                     myArray[0][0] == 'C' &&
+                     (myArray[0][1] >= '1' && myArray[0][1] <= '8'))
+            {
+                // handle history Reading
+              
+                calibrationHistory.setRec(this.calReadId);                               
+
+                if (myArray[1] === "-")                
+                {
+                    // invalid calibration record             
+
+                    if (this.calReadId == 0)
+                    {
+                        calibrationHistory.handleRecordRead(0, decodedValue);
+                    }
+					else
+					{
+						// invalid record but still more to check
+						
+						if (calibrationHistory.readState == 1)
+						{
+							calibrationHistory.readState = 3;
+						}
+						else
+						{
+							calibrationHistory.handleRecordRead(0, decodedValue);
+						}
+					}
+                }
+                else
+                {
+                    // calibration record is valid so handle it              
+
+                    this.calNumRecs++;
+                    calibrationHistory.setNumRecs(this.calNumRecs);
+                    calibrationHistory.handleRecordRead(0, decodedValue); 
+                }
+            }            
+            else if (myArray.length == 2)
+            {
+                // CC|- is no current Calibration
+                // Cx|- is no calibration at that position
+                
+                if (myArray[0] === "Cc" &&
+                    myArray[1] === "-")
+                {
+                    this.currentCalibrationIdx = 0;
+                    cCalibrationDate.value = getNowDateForInput();
+                    cCalibrationName.value = "";
+                    cCalibrationCompany.value = "";
+                    cCalibrationPhone.value = "";
+                                                        
+                    this.savedCalibrationName = cCalibrationName.value;
+                    this.savedCalibrationPhone = cCalibrationPhone.value;
+                    this.savedCalibrationCompany = cCalibrationCompany.value;
+                    this.savedCalibrationDate = cCalibrationDate.value;
+                }
+            }
+            else if (myArray.length == 7)
+            {
+                // CC|id|date|name|company|phone|hours is the current calibration record
+                
+                if (myArray[0] === "Cc")
+                {
+                    this.currentCalibrationIdx = parseInt(myArray[1]);
+                    
+                    cCalibrationDate.value = myArray[2]
+                    cCalibrationCompany.value = myArray[3];
+                    cCalibrationName.value = myArray[4];
+                    cCalibrationPhone.value = myArray[5];  
+
+                    this.savedCalibrationName = cCalibrationName.value;
+                    this.savedCalibrationPhone = cCalibrationPhone.value;
+                    this.savedCalibrationCompany = cCalibrationCompany.value;
+                    this.savedCalibrationDate = cCalibrationDate.value;                
+                }             
+            }
+        }
+        if (!this.commissionDataValid)
+        {
+            cInstalledDate.value = getNowDateForInput();
+            this.savedInstalledDate = cInstalledDate.value;
+        }
+        authorizeCommission();
+        authorizeCalibration();
+    }
+    
+    init()
+    {
+        if (this.initState == 0)
+        {
+            bleiface.setMessage(DBG_CONNECT, "Reading calibration record");
+            this.initState++;
+                                
+            const encodedValue = new TextEncoder().encode("2");
+            
+            this.write(encodedValue);
+        }
+        else
+        {
+            if (this.initState == 0x01)
+            {              
+                this.initState++;
+                bleiface.itemReadWithBusy(this);
+            }
+            else
+            {
+                super.init();
+            }
+        }
+    }
+
+    run()
+    {
+        // the order of these if statements is important
+        
+        if (this.readCalResponse)
+        {
+            this.readCalResponse = false;
+            bleiface.itemReadWithBusy(this);
+        }
+        else if (this.sendCal)
+        {
+            // tell device we are about to write a calibration record. (send already set)
+            
+            const encodedValue = new TextEncoder().encode("1");
+            
+            this.write(encodedValue);
+            this.sendCal = false;
+                
+            // writing a calibration record, so read back the current after its done
+                
+            this.sendCalQuery = true;
+        }
+        else if (this.send)
+        {
+            // send a calibration or commission record
+            
+            this.send = false;
+
+            const encodedValue = new TextEncoder().encode(this.sendValue);
+            
+            this.write(encodedValue);
+        }
+        else if (this.sendCalQuery)
+        {
+            // tell the device we want to read the current calibration record
+            
+            const encodedValue = new TextEncoder().encode("2"); // setup to read current record   
+            
+            this.write(encodedValue);
+            this.sendCalQuery = false;
+            this.readCalResponse = true;
+        }
+        else
+        {
+            calibrationHistory.handleHistoryLoading();
+        }        
+    }
+}
+
+
+//==========================================================
+//
+//          Settings
+//
+//==========================================================
+
+// variables
+
+const settingForm = document.querySelector("#settingForm");
+
+// Settings fields
+const fminPressure = document.querySelector("#fminPressure");
+const fmaxPressure = document.querySelector("#fmaxPressure");
+const fnoFilterPressure = document.querySelector("#fnoFilterPressure");
+const freplacePressure = document.querySelector("#freplacePressure");
+const fsampleRate = document.querySelector("#fsampleRate");
+const fsampleAverage = document.querySelector("#fsampleAverage");
+const fupCount = document.querySelector("#fupCount");
+const fdownCount = document.querySelector("#fdownCount");
+
+// event callbacks
+
+settingForm.addEventListener("submit", (event) => 
+{
+    event.preventDefault();
+  
+    const buffer = new ArrayBuffer(20);
+    const view = new DataView(buffer);
+
+    view.setUint16( 0, 0, true);
+    view.setUint16( 2, fnoFilterPressure.value, true);
+    view.setUint16( 4, fminPressure.value, true);
+    view.setUint16( 6, freplacePressure.value, true);
+    view.setUint16( 8, fmaxPressure.value, true);
+    view.setUint16(10, fsampleRate.value, true);
+    view.setUint16(12, fsampleAverage.value, true);
+    view.setUint16(14, fupCount.value, true);
+    view.setUint16(16, fdownCount.value, true);
+
+    var item = bleiface.getItem("Settings");
+    if (item)
+    {
+        item.sendSettings(buffer);
+    }
+});
+
+// bluetooth interface
+
+class blueToothSettings extends blueToothIf
+{
+    constructor ()
+    {
+        super ("Settings",   0, "3bfa3401-f9f9-4122-9367-979de74970b6");
+        this.send = false;
+        this.sendData = null;
+    }
+
+    disconnected()
+    {
+        super.disconnected();
+        this.send = false;
+    }
+
+    protocolVersionSet()
+    {
+      super.protocolVersionSet();
+    }
+
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+        
+        fnoFilterPressure.value = readValue.getUint16(2, true);
+        fminPressure.value = readValue.getUint16(4, true);
+        freplacePressure.value = readValue.getUint16(6, true);
+        fmaxPressure.value = readValue.getUint16(8, true);
+        fsampleRate.value = readValue.getUint16(10, true);
+        fsampleAverage.value = readValue.getUint16(12, true);
+        fupCount.value = readValue.getUint16(14, true);
+        fdownCount.value = readValue.getUint16(16, true);
+    }  
+    
+    sendSettings(data)
+    {
+        this.send = true;
+        this.sendData = data;
+    }
+    
+    run()
+    {
+        if (this.send)
+        {
+            this.send = false;
+            this.write(this.sendData);
+        }
+    }
+}
+
+//==========================================================
+//
+//          Status
+//
+//==========================================================
+
+// variables
+
+const sPressureBar = document.querySelector("#sPressureBar");
+const sStatus = document.querySelector("#sStatus");
+
+// bluetooth interface
+
+class blueToothStatus extends blueToothIf
+{
+    constructor ()
+    {
+        super ("Status", 0, "d65a4403-5c9a-43ff-aac3-3091ba7e165b");
+    }
+
+    protocolVersionSet() 
+    {
+        super.protocolVersionSet();
+    }
+    
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+
+        //Value = <calibrated x 2><raw x 2><averaged x 2><status x 2>
+        
+        //NOTE: With the pressure. need to scale to 100% (ie choose a range and if greater the set to 100)
+
+        let pressure = (readValue.getUint16(0, true) / 2 >> 0);
+        if (pressure > 100)
+        {
+            pressure = 100;
+        }
+  
+        sPressureBar.style.width = pressure + '%';
+        sPressureBar.innerHTML = readValue.getUint16(0, true) + 'pa';
+        
+        switch (readValue.getUint16(6, true))
+        {
+            case 5: // Good
+                sPressureBar.className="container-progress";
+                sStatus.value = "Good"
+            break;
+            
+            case 0: // None
+            case 6: // Initializing
+                sPressureBar.className="container-progress";
+                sStatus.value = "Wait. Initializing"
+            break;
+            
+            case 1: // Clogged
+                sPressureBar.className="container-progress-alarm";
+                sStatus.value = "Clogged"
+            break;
+            
+            case 2: // Almost Clogged
+                sPressureBar.className="container-progress-warning";
+                sStatus.value = "Replace filter soon"
+            break;      
+          
+            case 3: // No Filter
+                sPressureBar.className="container-progress-alarm";
+                sStatus.value = "No Filter"
+            break;   
+            
+            case 4: // Filter Hole
+                sPressureBar.className="container-progress-alarm";
+                sStatus.value = "Hole in Filter"
+            break;
+        }
+    }
+    
+    run()
+    {
+        if (selectDisplay === "statusDiv")
+        {
+            bleiface.itemReadWithBusy(this);
+        }
+    }
+}    
+
+//==========================================================
+//
+//          General
+//
+//==========================================================
+
+// variables
+
+var protocolVersion = 0;
+
+// bluetooth interface
+
+class blueToothGeneral extends blueToothIf
+{
+    constructor ()
+    {                         
+        super ("General", 1, "59bb5404-1e25-4cdb-aab9-c675d7d5b608");
+        this.version = "";
+    }
+    
+    getVersion()
+    {
+        return this.version;
+    }
+    
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+    
+        protocolVersion = readValue.getUint8(1);
+        this.version = readValue.getUint8(6) + "." + pad2(readValue.getUint8(7));
+        bleiface.protocolVersionSet();
+        bleiface.setMessage(DBG_CONNECT, "Version: " + this.version);  
+    }    
+}
+
+//==========================================================
+//
+//          Firmware update
+//
+//==========================================================
+
+function firmwareOpenFile()
+{
+    var item = bleiface.getItem("Firmware");
+    if (item)
+    {    
+        item.openFile();
+    }
+}
+
+function firmwareReadFile(e)
+{
+    var item = bleiface.getItem("Firmware");
+    if (item)
+    {    
+        item.loadFile(e);
+    }    
+}
+
+function firmwareHandleNotify(e)
+{
+    var item = bleiface.getItem("Firmware");
+    if (item)
+    {    
+        item.handleNotify(e);
+    }
+}
+
+function firmwareTransferCancel()
+{
+    var item = bleiface.getItem("Firmware");
+    if (item)
+    {    
+        item.sendCancel();
+    }
+}
+
+function firmwareTick()
+{
+    var item = bleiface.getItem("Firmware");
+    if (item)
+    {    
+        item.tick();
+    }
+}
+
+let wakeLockObj = null;
+
+class blueToothFirmware extends blueToothIf
+{
+    constructor ()
+    {            
+        super ("Firmware", 2, "aba88406-094b-4808-87a8-6d1d73afd8fe");
+        
+        this.firmwareMenuItem = 0;
+        this.elementMenuItem = document.getElementById("menuItemLogin");
+        this.binaryFirmwareFile = null;
+        this.versionElement = document.getElementById('firmwareVersion');
+        this.inputFileElement = document.getElementById('firmwareInputFile');
+        this.chooseFileElement = document.getElementById('firmwareChooseBtn');
+        this.progressElement = document.getElementById('firmwareProgressDiv');   
+        this.sendProgressElement = document.getElementById('firmwareProgress');
+        this.fileNameElement = document.getElementById('firmwareFileName');
+        this.transferElement = document.getElementById('firmwareTransfer');
+        this.transferResultElement = document.getElementById('firmwareResult');
+        this.uploadState = 0;
+        this.readIdx = 0;
+        this.lastReadIdx = 0;
+        this.retry = 0;
+        this.timer = 0;
+        this.displayTimer = 0;
+    }
+    
+    connect(service)
+    {
+        return super.connect(service);
+    }
+    
+    disconnected()
+    {
+        super.disconnected();
+        
+        if (this.firmwareMenuItem)
+        {
+            this.firmwareMenuItem.remove();
+            this.firmwareMenuItem = 0;
+        }
+        this.abortUpload(null);
+    }
+    
+    protocolVersionSet()
+    {
+        super.protocolVersionSet();
+        if (!this.firmwareMenuItem)
+        {
+            this.firmwareMenuItem = document.createElement("a");
+            this.firmwareMenuItem.setAttribute("href", "javascript:showDiv('firmwareDiv')");
+            this.firmwareMenuItem.innerHTML = "Firmware Update";
+                
+            this.elementMenuItem.parentNode.insertBefore(this.firmwareMenuItem, this.elementMenuItem.nextSibling); 
+        }
+    }
+
+    openFile()
+    {
+        if (this.inputFileElement)
+        {
+            this.inputFileElement.value = null;
+            this.chooseFileElement.disabled = true;
+            this.inputFileElement.click();
+        }
+    }
+    
+    loadFile(e)
+    {
+        var file = e.target.files[0];
+        if (!file) 
+        {
+            this.chooseFileElement.disabled = false;
+            this.progressElement.style.display = "none";
+            return;
+        }
+        this.fileNameElement.value = file.name;  
+        this.sendProgressElement.style.width = "0%";
+        this.sendProgressElement.innerHTML = "0%";        
+        this.transferElement.value = "";        
+        this.progressElement.style.display = "block";
+        
+        var reader = new FileReader();
+        reader.onload = function(e) 
+        {
+            var item = bleiface.getItem("Firmware");
+            if (item)
+            {    
+                item.startUpload(new Uint8Array(e.target.result));
+            }
+        };
+        reader.onerror = function() 
+        {
+            var item = bleiface.getItem("Firmware");
+            if (item)
+            {    
+                item.abortUpload("File error");
+            }
+        };
+        reader.readAsArrayBuffer(file)
+    }
+    
+    abortUpload(reason)
+    {
+        if (reason)
+        {
+            bleiface.setMessage(DBG_INFO, "Aborted: " + reason);
+        
+            this.transferResultElement.innerHTML = "Failed: " + reason;
+            this.displayTimer = 10;
+        }
+        else
+        {
+            this.transferResultElement.innerHTML = "";
+            this.displayTimer = 0;
+            this.timer = 0;
+        }
+        this.chooseFileElement.disabled = false;   
+        this.progressElement.style.display = "none";    
+        this.uploadState = 0;  
+        this.binaryFirmwareFile = null;
+
+        if (wakeLockObj)        
+        {
+            wakeLockObj.release();
+            wakeLockObj = null;
+        }
+    }
+    
+    tick()
+    {
+        let expired = false;
+        
+        if (this.timer > 0)
+        {
+            this.timer--;
+            expired = this.timer == 0;
+        }
+        
+        switch (this.uploadState)
+        {
+            case 0:
+                if (this.displayTimer > 0)
+                {
+                    this.displayTimer--;
+                    
+                    if (this.displayTimer == 0)
+                    {
+                        this.transferResultElement.innerHTML = "";
+                    }
+                }
+            break;
+            
+            case 1:
+            case 2:
+            case 3:
+                if (expired)
+                {
+                    if (this.retry > 0)
+                    {
+                        this.retry--;
+                        this.timer = 3;
+                            
+                        if (this.uploadState == 1)
+                        {                 
+                            this.sendStart();                            
+                        }
+                        else
+                        {
+                            this.sendNextSection();
+                        }
+                    }
+                    else
+                    {
+                        this.abortUpload("Device not responding");
+                    }                    
+                }
+            break;
+            
+            case 4:
+                if (expired)
+                {
+                    this.transferResultElement.innerHTML = "";
+                    bleiface.disconnect();
+                }
+            break;
+        }
+    }
+    
+    handleNotify(e)
+    {
+        switch (this.uploadState)
+        {
+            case 0:
+                // ignore
+            break;
+            
+            case 1:     // upload Start
+                if (e.target.value.getUint8(0) == 100)
+                {
+                    // we have started
+                    
+                    this.uploadState = 2;
+                    this.retry = 3;
+                    this.sendNextSection();
+                }
+                else
+                {
+                    this.abortUpload("Failed to start upload:" + e.target.value.getUint8(0));    
+                }
+            break;
+            
+            case 2:     // continue
+                if (e.target.value.getUint8(0) == 0 ||      // Ok
+                    e.target.value.getUint8(0) == 4)        // Invalid position
+                {
+                    this.readIdx = e.target.value.getUint8(2) |
+                                 (e.target.value.getUint8(3) << 8) |
+                                 (e.target.value.getUint8(4) << 16) |
+                                 (e.target.value.getUint8(5) << 24);
+                    
+                    if (this.lastReadIdx == this.readIdx)
+                    {
+                        if (this.retry > 0)
+                        {
+                            this.retry--;
+                        }
+                        if (this.retry == 0)
+                        {
+                            this.abortUpload("Too many retires: " + this.readIdx);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        this.lastReadIdx = this.readIdx;
+                        this.retry = 3;
+                    }
+        
+                    this.sendNextSection();             
+                }
+                else
+                {
+                    this.abortUpload("Aborted by device: " + e.target.value.getUint8(0));    
+                }
+            break;
+            
+            case 3:     // done
+                if (e.target.value.getUint8(0) == 101)      // done
+                {
+                    this.abortUpload(null);
+            
+                    this.timer = 5;
+                    this.displayTimer = 10;            
+                    this.transferResultElement.innerHTML = "Success. Restarting device";
+                    
+                    this.uploadState = 4;                    
+                    this.sendReset(); 
+                    if (wakeLockObj)        
+                    {
+                        wakeLockObj.release();
+                        wakeLockObj = null;
+                    }                    
+                }
+                else
+                {
+                    this.abortUpload("Device failed to burn");  
+                }
+            break;
+            
+            case 4:
+                // just waiting to disconnect.
+            break;
+            
+            default:
+                this.abortUpload("Unknown state");
+                this.uploadState = 0;
+            break;
+        }
+    }
+    
+    sendCancel()
+    {
+        if (this.uploadState != 0)
+        {
+            let data = new Uint8Array(1);
+            
+            data[0] = 3;
+        
+            this.write(data);
+            this.abortUpload("Canceled");
+        }
+    }
+    
+    sendReset()
+    {
+        let data = new Uint8Array(1);
+            
+        data[0] = 4;
+        
+        this.write(data);
+    }
+    
+    sendStart()
+    {
+        let data = new Uint8Array(5);
+            
+        data[0] = 0;
+        data[1] = 0;
+        data[2] = 0;
+        data[3] = 0;
+        data[4] = 0;        
+        
+        this.write(data);
+    }
+    
+    startUpload(thedata)
+    {
+        if ("wakeLock" in navigator)
+        {
+            navigator.wakeLock.request('screen')
+                .then((wakeLock) => 
+                {
+                    wakeLockObj = wakeLock;
+          
+                    wakeLockObj.addEventListener('release', () => 
+                    {
+                        wakeLockObj = null;
+                    })
+                })
+                .catch((err) => 
+                {
+                })
+        }
+        this.lastReadIdx = 0;
+        this.timer = 3;
+        this.retry = 3;
+        
+        this.sendProgressElement.style.width = "0%";
+        this.sendProgressElement.innerHTML = "0%";
+        
+        this.binaryFirmwareFile = thedata;        
+        this.transferElement.value = this.readIdx + " of " + this.binaryFirmwareFile.length;
+
+        this.readIdx = 0;
+        this.uploadState = 1;
+           
+        this.sendStart();
+        
+        bleiface.setMessage(DBG_INFO, "File size=" + this.binaryFirmwareFile.length);        
+    }
+    
+    sendNextSection()
+    {
+        if (this.uploadState == 2)
+        {
+            this.timer = 3;
+            this.transferElement.value = this.readIdx + " of " + this.binaryFirmwareFile.length;
+            
+            let txSize = this.binaryFirmwareFile.length - this.readIdx;
+            
+            if (txSize > (512 - 5))
+            {
+                txSize = 512 - 5;
+            }
+                        
+            let data = new Uint8Array(txSize + 5);  
+
+            data[0] = (txSize > 0) ? 1 : 2;
+            data[1] = this.readIdx;
+            data[2] = this.readIdx >> 8;
+            data[3] = this.readIdx >> 16;
+            data[4] = this.readIdx >> 24;
+            
+            if (txSize > 0)
+            {
+                data.set(this.binaryFirmwareFile.subarray(this.readIdx, this.readIdx + txSize), 5);
+            }
+            else
+            {
+                this.uploadState = 3;
+            }
+            this.write(data);
+            
+            if (this.binaryFirmwareFile.length > 0)
+            {
+                let progress = Math.floor((this.readIdx * 100) / this.binaryFirmwareFile.length);
+                
+                this.sendProgressElement.style.width = progress + '%';
+                this.sendProgressElement.innerHTML = progress + '%';
+            }
+        }
+        else
+        {
+            this.abortUpload("Not in upload state");
+        }
+    }
+    
+    init()
+    {
+        if (this.initState == 0)
+        {
+            if (this.characteristic)
+            {
+                this.characteristic.addEventListener('characteristicvaluechanged', firmwareHandleNotify);
+            }
+            this.versionElement.value = bleiface.getItem("General").getVersion();
+            super.init();
+        }
+    }
+    
+    run()
+    {
+    }
+}    
+
+//==========================================================
+//
+//          Authorize
+//
+//==========================================================
+
+// callback events
+
+function loginClicked()
+{
+    authorizeControl.handleClicked();
+}
+
+// authorize class
+
+class authorizeClass
+{
+    constructor()
+    {
+        this.authorized = false;
+        this.sendLogin = false;
+        this.sendPassword = "";
+        this.queryLogin = false;
+        this.count = 0;
+        this.timer = 0;
+        this.elementBtn = document.getElementById("loginBtn");
+        this.elementPassword = document.getElementById("loginPassword");
+        this.elementDbg = document.getElementById("loginDbg");
+        this.elementMenuItem = document.getElementById("menuItemLogin");
+        this.elementHeader = document.getElementById("loginDivHeader");
+        this.elementPasswordDiv = document.getElementById("loginPasswordRow");
+        this.settingMenuItem = 0;
+    }
+    
+    handleClicked()
+    {
+        if (!this.authorized)
+        {
+            this.sendPassword = this.elementPassword.value;
+            this.sendLogin = true;
+        }
+        else
+        {
+            this.sendPassword = "";
+            this.sendLogin = true;
+        }
+    }
+    
+    tick()
+    {
+        if (this.timer > 0)
+        {
+            this.timer--;
+            
+            if (this.timer == 0)
+            {
+                if (!this.authorized)
+                {
+                    this.elementDbg.innerHTML = "Enter password to login";
+                }
+                else
+                {
+                    this.elementDbg.innerHTML = "Click button to logout";
+                }
+                    
+            }
+        }
+    }
+    
+    restart()
+    {
+        this.setAuthorized(false);
+        this.sendLogin = true;
+        this.sendPassword = "";
+        this.queryLogin = false;
+        this.elementPassword.value = "";
+    }
+    
+    getAuthorized()
+    {
+        return this.authorized;
+    }
+
+    setAuthorized(authorized)
+    {
+        if (authorized != this.authorized)
+        {
+            this.authorized = authorized;
+            if (authorized)
+            {
+                this.elementBtn.value = "Logout";  
+                this.elementMenuItem.innerHTML = "Logout";
+                this.elementHeader.innerHTML = "Logout";
+                this.elementPasswordDiv.style.display = "none";
+
+                if (!this.settingMenuItem)
+                {
+                    this.settingMenuItem = document.createElement("a");
+                    this.settingMenuItem.setAttribute("href", "javascript:showDiv('settingDiv')");
+                    this.settingMenuItem.innerHTML = "Settings";
+                
+                    this.elementMenuItem.parentNode.insertBefore(this.settingMenuItem, this.elementMenuItem.nextSibling); 
+                }
+            }
+            else
+            {
+                this.elementBtn.value = "Login";
+                this.elementMenuItem.innerHTML = "Login";
+                this.elementHeader.innerHTML = "Login";
+                this.elementPasswordDiv.style.display = "block";
+
+                if (this.settingMenuItem)
+                {
+                    this.settingMenuItem.remove();
+                    this.settingMenuItem = 0;
+                }
+            }
+            this.elementPassword.readOnly = authorized;
+        }
+        authorizeCommission();
+        authorizeCalibration();
+    }
+
+    processData(data)
+    {
+        const decodedValue = new TextDecoder().decode(data);
+
+        let wasAuthorized = this.authorized;
+
+        this.queryLogin = false;
+        this.setAuthorized(decodedValue == "Y");    
+
+        if (this.sendPassword == "")
+        {
+            if (!this.authorized && wasAuthorized)
+            {
+                this.timer = 5;
+                this.elementDbg.innerHTML = "Successful Logout";                
+            }
+        }
+        else
+        {
+            if (!this.authorized)
+            {
+                this.timer = 5;
+                this.elementDbg.innerHTML = "Login failed";                
+            }
+            else
+            {
+                this.timer = 5;
+                this.elementDbg.innerHTML = "Successful Login"; 
+                this.elementPassword.value = "";
+            }
+        }
+    }    
+
+    handleActions(item)
+    {
+        if (this.sendLogin)
+        {
+            this.timer = 5;
+            this.elementDbg.innerHTML = "Trying...";
+
+            this.sendLogin = false;
+            this.queryLogin = true;
+            this.count = 2;
+
+            item.sendLogin(this.sendPassword);
+
+            return true;
+        }
+
+        if (this.queryLogin)
+        {
+            if (this.count == 0)
+            {
+                this.timer = 5;
+                this.elementDbg.innerHTML = "Login/Logout failed. No response";
+                this.queryLogin = false;
+                this.setAuthorized(false);
+            }
+            else
+            {
+                this.count--;
+                
+                bleiface.itemReadWithBusy(item);
+            }
+            return true;
+        }
+        return false;
+    }
+}
+
+// bluetooth interface
+
+class blueToothAuthorize extends blueToothIf
+{
+    constructor ()
+    {
+        super ("Authorize", 1, "af297289-ad63-457c-bc81-de7db0450df7");
+    }
+
+    setRead(readValue)
+    {
+        super.setRead(readValue);
+
+        authorizeControl.processData(readValue);
+    }
+
+    sendLogin(password)
+    {
+        const encodedValue = new TextEncoder().encode(password);
+
+        this.write(encodedValue);
+    }
+
+    run()
+    {
+        authorizeControl.handleActions(this);
+    }
+}       
+
+//==========================================================
+//
+//          Blue tooth device
+//
+//==========================================================
+    
+class blueToothDevice
+{
+    constructor()
+    {
+        this.msg = "";
+        
+        this.connectState = 0;
+        this.readingItem = null;
+        
+        this.device = null;
+        this.server = null;
+        
+        this.serviceUUID = new Array("0777a01a-035e-4a01-9bd8-87b2b56a6bd1",
+                                     "0777a01b-035e-4a01-9bd8-87b2b56a6bd1",
+                                     "0777a01c-035e-4a01-9bd8-87b2b56a6bd1");
+        this.service = new Array(null, null);
+        
+        this.bleItem = new Array();
+        
+        this.bleItem.push(new blueToothCommission());
+        this.bleItem.push(new blueToothSettings());
+        this.bleItem.push(new blueToothStatus());
+        this.bleItem.push(new blueToothTest());
+        
+        this.bleItem.push(new blueToothGeneral());
+
+        this.bleItem.push(new blueToothAuthorize());
+        this.bleItem.push(new blueToothFirmware());
+        
+        this.busy = false;
+        this.infoStr = "";
+        this.initDone = false;
+        this.tickCount = 0;
+    }
+    
+    disconnect()
+    {
+        if (this.isConnected())
+        {
+            this.connectState = 0;
+            this.device.gatt.disconnect();
+            connectingTicks.innerHTML = "";
+        }
+    }
+    
+    disconnected()
+    {
+        this.device = null;
+        this.service[0] = null;
+        this.service[1] = null;
+        this.server = null;
+        this.connectState = 0;
+        this.busy = false;
+        this.initDone = false;
+        this.tickCount = 0;
+        
+        this.bleItem.forEach((item) => item.disconnected());
+        connectingTicks.innerHTML = "";
+    }
+
+    protocolVersionSet()
+    {
+        this.bleItem.forEach((item) => item.protocolVersionSet());
+    }
+    
+    start()
+    {
+        connectingState.innerHTML = "";
+        this.tickCount = 0;
+        connectingTicks.innerHTML = "0";
+        this.setMessage(DBG_CONNECT, "Connecting to device");
+        this.connectState = 1;
+        this.bleItem.forEach((item) => item.start());
+    }
+    
+    done()
+    {
+        this.connectState = 2;
+        
+        this.bleItem.forEach((item) => item.done());
+
+        setTimeout(bluetoothPoll, 10);
+    }
+    
+    setError(error)
+    {
+        this.setMessage(DBG_ERROR, "Last: " + this.msg + "  Fail:Reason:" + error);
+        this.connectState = 3;    
+        connectingTicks.innerHTML = "";
+        this.bleItem.forEach((item) => item.failed());
+        this.device = null;
+        this.service[0] = null;
+        this.service[1] = null;
+        this.server = null;
+    }
+    
+    init()
+    {
+        let result = false;
+        if (!this.isBusy() && !this.initDone)
+        {
+            for (var item of this.bleItem)
+            {
+                if (!item.isInit())
+                {
+                    result = true;
+                    item.init();
+                }
+                if (this.isBusy())
+                {
+                    break;
+                }
+            }
+            if (!result)
+            {
+                this.initDone = true;
+                connectingTicks.innerHTML = "";
+                connectingState.innerHTML = "";              
+                
+                this.setMessage(DBG_CONNECT, "Connected to device");
+                this.setMessage(DBG_CONNECT, "");
+                this.setMessage(DBG_CONNECT, "Version : " + this.getItem("General").getVersion());
+
+                menuHide();
+                activeLinks = "connectedLinks";
+
+                if (selectDisplay === "connectingDiv")
+                {
+                    showDiv("statusDiv");
+                }                
+            }
+        }
+        return this.isBusy() || result;
+    }
+
+    run()
+    {
+        if (!this.isBusy())
+        {
+            for (var item of this.bleItem)
+            {
+                item.run();
+                if (this.isBusy())
+                {
+                    break;
+                }
+            }
+        }
+        return this.isBusy();
+    }
+    
+    setBusy(infoStr)
+    {
+        this.busy = true;
+        this.infoStr = infoStr;
+    }
+    
+    clearBusy()
+    {
+        this.busy = false;
+    }
+    
+    isBusy()
+    {
+        return this.busy || (!this.isConnected);
+    }
+    
+    isConnected()
+    {
+        return this.connectState == 2;
+    }
+    
+    setDevice(device)
+    {
+        this.device = device;
+    }
+    
+    setServer(server)
+    {
+        this.server = server;
+    }
+    
+    setService(idx, service)
+    {
+        this.service[idx] = service;
+    }
+
+    setItem(name, characteristic)
+    {            
+        this.getItem(name).setCharactistic(characteristic);
+    }        
+    
+    setMessage(msgType, msg)
+    {
+        this.msg = msg;
+        switch (msgType)
+        {
+            case DBG_CONNECT:
+                connectingState.innerHTML += "<br>" + msg;
+            break;
+
+            case DBG_INFO:
+                //phdbg.innerHTML += "<br>" + msg;
+            break;
+
+            case DBG_ERROR:
+                connectingState.innerHTML += "<br>" + msg;
+            break;            
+        }
+    }
+    
+    getServiceUUID(idx)
+    {
+        return this.serviceUUID[idx].toLowerCase();
+    }
+    
+    serverConnect()
+    {
+        this.setMessage(DBG_CONNECT, "Discovering services");
+        return this.device.gatt.connect();
+    }
+    
+    serviceConnect(idx)
+    {
+        return this.server.getPrimaryService(this.serviceUUID[idx]);
+    }
+    
+    itemConnect(name)
+    {
+        this.setMessage(DBG_INFO, "Finding " + name);
+        return this.getItem(name).connect(this.service);    
+    }
+    
+    itemRead(name)
+    {
+        this.setMessage(DBG_INFO, "Reading " + name);
+        return this.getItem(name).read();    
+    }
+    
+    setRead(name, valueRead)
+    {
+        this.getItem(name).setRead(valueRead);
+    }
+    
+    itemReadWithBusy(item)
+    {
+        bleiface.setBusy(item.getName());
+        this.readingItem = item;
+        
+        item.read()
+            .then (cdata =>
+            {
+                bleiface.readingItem.setRead(cdata);
+                bleiface.clearBusy();
+                return true;
+            })
+            .catch (error =>
+            {
+                bleiface.setError(DBG_ERROR, "Reading " + bleiface.readingItem.getName() + " error: " + error);
+            }); 
+    }
+    
+    getItem(name)
+    {
+        for (var item of this.bleItem)
+        {
+            if (item.getName() === name)
+            {
+                return item;
+            }
+        }   
+        
+        setError(DBG_ERROR, "Unable to find '" + name + "' as a ble interface");
+        return null;
+    }
+    
+    tick()
+    {
+        if (this.connectState == 1 ||
+            (this.connectState == 2 && !this.initDone))
+        {
+            this.tickCount++;
+            connectingTicks.innerHTML = this.tickCount;
+        }
+    }
+}
+
+//==========================================================
+//
+//          Connect to blue tooth process
+//
+//==========================================================
+
+var bleiface = new blueToothDevice();   
+
+function isWebBluetoothEnabled() 
+{
+    if (!navigator.bluetooth) 
+    {
+        menuHide();
+        showDiv("connectingDiv");
+        connectingState.innerHTML = "Web Bluetooth API is not available in this browser/device!";
+        return false
+    }
+    return true
+}
+   
+function connectToBluetooth()
+{
+    bleiface.disconnected();
+    if (isWebBluetoothEnabled())
+    {
+        menuDisabled=true;
+        navigator.bluetooth.requestDevice({
+            filters: [{name: 'FILTERMONITOR'}],
+            optionalServices: [bleiface.getServiceUUID(0), bleiface.getServiceUUID(1)]
+        })
+        .then(device => 
+        {     
+            bleiface.start();
+            device.addEventListener('gattserverdisconnected', onDisconnected); 
+            bleiface.setDevice(device);
+            return bleiface.serverConnect();
+        })
+        .then(server => 
+        {
+            bleiface.setServer(server);
+            return bleiface.serviceConnect(0);
+        })
+        .then(service0 =>
+        {
+            bleiface.setService(0, service0);
+            
+            return bleiface.serviceConnect(1);
+        })
+        .then(service1 =>
+        {
+            bleiface.setService(1, service1);
+            
+            return bleiface.serviceConnect(1);
+        })
+        .then(service2 =>
+        {
+            bleiface.setService(2, service2);
+                   
+            return bleiface.itemConnect("General");
+        })
+        .then(item0 =>
+        {
+            bleiface.setItem("General", item0);
+         
+            // need to know the protocol version, so get it now
+            
+            return bleiface.itemRead("General");
+        })        
+        .then(cdata =>
+        {
+            bleiface.setRead("General", cdata);
+                
+            return bleiface.itemConnect("Firmware");
+        })      
+        .then(item0 =>
+        {
+             bleiface.setItem("Firmware", item0); 
+
+            return item0.startNotifications();
+        })    
+        .then(_ =>
+        {
+            return bleiface.itemConnect("Test");
+        })
+        .then(item1 =>
+        {
+            bleiface.setItem("Test", item1);
+            
+            return bleiface.itemConnect("Commission");
+        })
+        .then(item4 =>
+        {
+            bleiface.setItem("Commission", item4);
+            
+            return bleiface.itemConnect("Settings");
+        })
+        .then(item5 =>
+        {
+            bleiface.setItem("Settings", item5);
+            
+            return bleiface.itemConnect("Status");
+        })
+        .then(item51 =>
+        {
+            bleiface.setItem("Status", item51);
+            
+            return bleiface.itemConnect("Authorize");
+        })
+        .then(item8 =>
+        {
+            bleiface.setItem("Authorize", item8);
+          
+            bleiface.setMessage(DBG_CONNECT, "Discover done. Reading...");
+            
+            return bleiface.itemRead("General");
+        })
+        .then(cdata =>
+        {
+            bleiface.setRead("General", cdata);
+            
+            return bleiface.itemRead("Commission");
+        })
+        .then(cdata =>
+        {
+            bleiface.setRead("Commission", cdata);
+            
+            return bleiface.itemRead("Settings");
+        })
+        .then(cdata =>
+        {
+            bleiface.setRead("Settings", cdata);
+                       
+            return bleiface.itemRead("Status");
+        })
+        .then(cdata =>
+        {
+            bleiface.setRead("Status", cdata);
+            
+            bleiface.setMessage(DBG_CONNECT, "Reading done. Initializing...");        
+            menuDisabled=false;            
+            return bleiface.done();
+        })
+        .catch(error =>
+        {
+            menuDisabled=false;
+            bleiface.setError(error);        
+        });
+    }
+}
+
+function onDisconnected(event)
+{
+  menuHide();
+  activeLinks = "idleLinks";
+  showDiv("connectingDiv");
+  connectingState.innerHTML = "Device disconnected";
+  //phdbg.innerHTML = "";
+}
+
+function connect()
+{
+    if (isWebBluetoothEnabled())
+    {
+        authorizeControl.restart();
+        testControl.restart();
+ 
+        menuHide();
+        showDiv("connectingDiv");
+        //connectingState.innerHTML = "Connecting...";
+ 
+        connectToBluetooth();        
+    }
+        
+/*
+  if (isWebBluetoothEnabled())
+  {
+      device.addEventListener('gattserverdisconnected', onDisconnected); 
+      
+      setTimeout(bluetoothPoll, 1000);
+      activeLinks = "connectedLinks";
+      connectingState.innerHTML = "Connected";
+    })
+    .catch(error => 
+    {
+      connectingState.innerHTML = "Connection Failed: " + error;
+    });
+  }
+  */
+}
+
+function disconnect()
+{
+    menuHide();
+    activeLinks = "idleLinks";
+    showDiv("connectingDiv");
+    connectingState.innerHTML = "Device disconnected";
+    bleiface.disconnect();
+    //phdbg.innerHTML = "";
+}
+
+function halfSecondTimer()
+{
+    if (authorizeControl)
+    {
+        authorizeControl.tick();
+    }
+    if (testControl)
+    {
+        testControl.tick();
+    }    
+    if (bleiface)
+    {
+        bleiface.tick();
+    }
+    firmwareTick();
+    
+    setTimeout(halfSecondTimer, 500);
+}
+
+function bluetoothPoll()
+{    
+    if (bleiface.isConnected())
+    {
+        bleiface.init();
+        if (!bleiface.isBusy())
+        {
+            bleiface.run();
+        }
+        
+        if (bleiface.isBusy())
+        {
+            setTimeout(bluetoothPoll, 20);
+        }
+        else
+        {
+            setTimeout(bluetoothPoll, 200);
+        }
+    }
+}
+
+window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+    alert("Error occured: " + errorMsg);//or any message
+    return false;
+}
+
+</script>
+
+</body>
+</html>
