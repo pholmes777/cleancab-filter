@@ -1,6 +1,6 @@
 //Reference: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/CycleTracker/Service_workers
 
-const VERSION = "v1"
+const VERSION = "v2"
 const APP_NAME = "cleancab-filter-app";
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 
