@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.008</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.009</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -415,7 +415,7 @@
           <label class="units">pa</label>
         </div>
       </div>
-      <div class="row">  
+      <!--div class="row">  
         <div class="col-40">
           <label>No Filter Pressure</label>
         </div>
@@ -428,7 +428,7 @@
         <div class="col-5">
           <label class="units">pa</label>
         </div>
-      </div>
+      </div--!>
       <div class="row">  
         <div class="col-40">
           <label>Replace Filter Pressure</label>
@@ -2259,7 +2259,7 @@ const settingForm = document.querySelector("#settingForm");
 // Settings fields
 const fminPressure = document.querySelector("#fminPressure");
 const fmaxPressure = document.querySelector("#fmaxPressure");
-const fnoFilterPressure = document.querySelector("#fnoFilterPressure");
+//const fnoFilterPressure = document.querySelector("#fnoFilterPressure");
 const freplacePressure = document.querySelector("#freplacePressure");
 const fsampleRate = document.querySelector("#fsampleRate");
 const fsampleAverage = document.querySelector("#fsampleAverage");
@@ -2276,7 +2276,7 @@ settingForm.addEventListener("submit", (event) =>
     const view = new DataView(buffer);
 
     view.setUint16( 0, 0, true);
-    view.setUint16( 2, fnoFilterPressure.value, true);
+    view.setUint16( 2, fminPressure.value, true);
     view.setUint16( 4, fminPressure.value, true);
     view.setUint16( 6, freplacePressure.value, true);
     view.setUint16( 8, fmaxPressure.value, true);
@@ -2318,7 +2318,7 @@ class blueToothSettings extends blueToothIf
     {
         super.setRead(readValue);
         
-        fnoFilterPressure.value = readValue.getUint16(2, true);
+        //fnoFilterPressure.value = readValue.getUint16(2, true);
         fminPressure.value = readValue.getUint16(4, true);
         freplacePressure.value = readValue.getUint16(6, true);
         fmaxPressure.value = readValue.getUint16(8, true);
