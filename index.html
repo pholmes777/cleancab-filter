@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.010</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.011</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -2332,16 +2332,16 @@ settingForm.addEventListener("submit", (event) =>
     view.setUint16( 0, 0, true);
     view.setUint16( 2, fminPressure.value, true);
     view.setUint16( 4, fminPressure.value, true);
-    view.setUint16( 6, freplacePressure.value, true);
-    view.setUint16( 8, fmaxPressure.value, true);
+    view.setUint16( 6, fmaxPressure.value, true);
+    view.setUint16( 8, freplacePressure.value, true);
     view.setUint16(10, fsampleRate.value, true);
     view.setUint16(12, fsampleAverage.value, true);
     view.setUint16(14, fupCount.value, true);
     view.setUint16(16, fdownCount.value, true);
     view.setUint16(18, fminPressureMain.value, true);
     view.setUint16(20, fminPressureMain.value, true);
-    view.setUint16(22, freplacePressureMain.value, true);
-    view.setUint16(24, fmaxPressureMain.value, true);
+    view.setUint16(22, fmaxPressureMain.value, true);
+    view.setUint16(24, freplacePressureMain.value, true);
     var item = bleiface.getItem("Settings");
     if (item)
     {
@@ -2377,16 +2377,16 @@ class blueToothSettings extends blueToothIf
         
         //fnoFilterPressure.value = readValue.getUint16(2, true);
         fminPressure.value = readValue.getUint16(4, true);
-        freplacePressure.value = readValue.getUint16(6, true);
-        fmaxPressure.value = readValue.getUint16(8, true);
+        fmaxPressure.value = readValue.getUint16(6, true);
+        freplacePressure.value = readValue.getUint16(8, true);
         fsampleRate.value = readValue.getUint16(10, true);
         fsampleAverage.value = readValue.getUint16(12, true);
         fupCount.value = readValue.getUint16(14, true);
         fdownCount.value = readValue.getUint16(16, true);
-        fminPressureMain.value = readValue.getUint16(18, true);
-        freplacePressureMain.value = readValue.getUint16(20, true);
+        //fnoFilterPressureMain.value = readValue.getUint16(18, true);
+        fminPressureMain.value = readValue.getUint16(20, true);        
         fmaxPressureMain.value = readValue.getUint16(22, true);
-        fsampleRateMain.value = readValue.getUint16(24, true);
+        freplacePressureMain.value = readValue.getUint16(24, true);
     }  
     
     sendSettings(data)
