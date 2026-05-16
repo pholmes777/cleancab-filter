@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.011</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.012</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -2326,7 +2326,7 @@ settingForm.addEventListener("submit", (event) =>
 {
     event.preventDefault();
   
-    const buffer = new ArrayBuffer(20);
+    const buffer = new ArrayBuffer(26);
     const view = new DataView(buffer);
 
     view.setUint16( 0, 0, true);
@@ -2448,6 +2448,13 @@ class blueToothStatus extends blueToothIf
   
         sPressureBar.style.width = pressure + '%';
         sPressureBar.innerHTML = readValue.getUint16(0, true) + 'pa';
+        
+        pressure = (readValue.getUint16(8, true) / 10 >> 0);
+        if (pressure > 100)
+        {
+            pressure = 100;
+        }
+        
         sPressureMainBar.style.width = pressure + '%';
         sPressureMainBar.innerHTML = readValue.getUint16(8, true) + 'pa';
         
