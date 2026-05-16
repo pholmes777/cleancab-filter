@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.009</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.010</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -68,6 +68,7 @@
   <h3>Status</h3>
   <div class="container">
     <form>
+    <h3>HEPA Filter</h3>
     <div class="row">
       <div class="col-35">
         <label>Pressure</label>
@@ -86,6 +87,25 @@
         <input type="text" id="sStatus" readonly value="unknown">
       </div>
     </div>  
+    <h3>Main Filter</h3>
+    <div class="row">
+      <div class="col-35">
+        <label>Pressure</label>
+      </div>
+      <div class="col-65">
+        <div class="row-progress">
+          <div id="sPressureMainBar" class="container-progress" style="width:1%">1pa</div>
+        </div>
+      </div>   
+    </div>  
+    <div class="row">
+      <div class="col-35">
+        <label>Status</label>
+      </div>
+      <div class="col-65">
+        <input type="text" id="sStatusMain" readonly value="unknown">
+      </div>
+    </div>     
     </form>
   </div>
 </div>  
@@ -387,6 +407,7 @@
   <h3>Settings</h3>
   <div class="container">
     <form id="settingForm">
+      <h3>HEPA Filter</h3>
       <div class="row">  
         <div class="col-40">
           <label>Minimum Pressure</label>
@@ -415,20 +436,6 @@
           <label class="units">pa</label>
         </div>
       </div>
-      <!--div class="row">  
-        <div class="col-40">
-          <label>No Filter Pressure</label>
-        </div>
-        <div class="col-5">
-          <div class="tooltip">?<span class="tooltiptext">Maximum pressure differential where filter is deemed to be not installed</span></div>
-        </div>
-        <div class="col-50">
-          <input type="number" id="fnoFilterPressure" min="1" max="200" placeholder="5" required="true">
-        </div>
-        <div class="col-5">
-          <label class="units">pa</label>
-        </div>
-      </div--!>
       <div class="row">  
         <div class="col-40">
           <label>Replace Filter Pressure</label>
@@ -443,6 +450,51 @@
           <label class="units">pa</label>
         </div>
       </div>
+      <h3>Main Filter</h3>
+      <div class="row">  
+        <div class="col-40">
+          <label>Minimum Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Minimum pressure where filter is deemed ok</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fminPressureMain" min="1" max="200" placeholder="10" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>Maximum Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Maximum pressure where filter is deemed ok</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="fmaxPressureMain" min="1" max="1000" placeholder="40" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      <div class="row">  
+        <div class="col-40">
+          <label>Replace Filter Pressure</label>
+        </div>
+        <div class="col-5">
+          <div class="tooltip">?<span class="tooltiptext">Pressure where filter is almost clogged</span></div>
+        </div>
+        <div class="col-50">
+          <input type="number" id="freplacePressureMain" min="1" max="1000" placeholder="35" required="true">
+        </div>
+        <div class="col-5">
+          <label class="units">pa</label>
+        </div>
+      </div>
+      
+      <h3>General</h3>
       <div class="row">  
         <div class="col-40">
           <label>Pressure sample rate</label>
@@ -2259,8 +2311,10 @@ const settingForm = document.querySelector("#settingForm");
 // Settings fields
 const fminPressure = document.querySelector("#fminPressure");
 const fmaxPressure = document.querySelector("#fmaxPressure");
-//const fnoFilterPressure = document.querySelector("#fnoFilterPressure");
 const freplacePressure = document.querySelector("#freplacePressure");
+const fminPressureMain = document.querySelector("#fminPressureMain");
+const fmaxPressureMain = document.querySelector("#fmaxPressureMain");
+const freplacePressureMain = document.querySelector("#freplacePressureMain");
 const fsampleRate = document.querySelector("#fsampleRate");
 const fsampleAverage = document.querySelector("#fsampleAverage");
 const fupCount = document.querySelector("#fupCount");
@@ -2284,7 +2338,10 @@ settingForm.addEventListener("submit", (event) =>
     view.setUint16(12, fsampleAverage.value, true);
     view.setUint16(14, fupCount.value, true);
     view.setUint16(16, fdownCount.value, true);
-
+    view.setUint16(18, fminPressureMain.value, true);
+    view.setUint16(20, fminPressureMain.value, true);
+    view.setUint16(22, freplacePressureMain.value, true);
+    view.setUint16(24, fmaxPressureMain.value, true);
     var item = bleiface.getItem("Settings");
     if (item)
     {
@@ -2326,6 +2383,10 @@ class blueToothSettings extends blueToothIf
         fsampleAverage.value = readValue.getUint16(12, true);
         fupCount.value = readValue.getUint16(14, true);
         fdownCount.value = readValue.getUint16(16, true);
+        fminPressureMain.value = readValue.getUint16(18, true);
+        freplacePressureMain.value = readValue.getUint16(20, true);
+        fmaxPressureMain.value = readValue.getUint16(22, true);
+        fsampleRateMain.value = readValue.getUint16(24, true);
     }  
     
     sendSettings(data)
@@ -2354,6 +2415,8 @@ class blueToothSettings extends blueToothIf
 
 const sPressureBar = document.querySelector("#sPressureBar");
 const sStatus = document.querySelector("#sStatus");
+const sPressureMainBar = document.querySelector("#sPressureMainBar");
+const sStatusMain = document.querySelector("#sStatusMain");
 
 // bluetooth interface
 
@@ -2385,6 +2448,8 @@ class blueToothStatus extends blueToothIf
   
         sPressureBar.style.width = pressure + '%';
         sPressureBar.innerHTML = readValue.getUint16(0, true) + 'pa';
+        sPressureMainBar.style.width = pressure + '%';
+        sPressureMainBar.innerHTML = readValue.getUint16(8, true) + 'pa';
         
         switch (readValue.getUint16(6, true))
         {
@@ -2419,6 +2484,40 @@ class blueToothStatus extends blueToothIf
                 sStatus.value = "Hole in Filter"
             break;
         }
+
+        switch (readValue.getUint16(14, true))
+        {
+            case 5: // Good
+                sPressureMainBar.className="container-progress";
+                sStatusMain.value = "Good"
+            break;
+            
+            case 0: // None
+            case 6: // Initializing
+                sPressureMainBar.className="container-progress";
+                sStatusMain.value = "Wait. Initializing"
+            break;
+            
+            case 1: // Clogged
+                sPressureMainBar.className="container-progress-alarm";
+                sStatusMain.value = "Clogged"
+            break;
+            
+            case 2: // Almost Clogged
+                sPressureMainBar.className="container-progress-warning";
+                sStatusMain.value = "Replace filter soon"
+            break;      
+          
+            case 3: // No Filter
+                sPressureMainBar.className="container-progress-alarm";
+                sStatusMain.value = "No Filter"
+            break;   
+            
+            case 4: // Filter Hole
+                sPressureMainBar.className="container-progress-alarm";
+                sStatusMain.value = "Hole in Filter"
+            break;
+        }        
     }
     
     run()
