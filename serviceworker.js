@@ -5,15 +5,15 @@ const APP_NAME = "cleancab-filter-app";
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
-    '/cleancab-filter/app-images/appicon-144.png',
-    '/cleancab-filter/app-images/appicon-192.png',
-    '/cleancab-filter/app-images/appicon-256.png',
-    '/cleancab-filter/app-images/appicon-512.png',
-    '/cleancab-filter/index.html',
-    '/cleancab-filter/fallback.html',
-    '/cleancab-filter/manifest.json',
-    '/cleancab-filter/cleancab.png',
-    '/cleancab-filter/styleph.css';
+    '/app-images/appicon-144.png',
+    '/app-images/appicon-192.png',
+    '/app-images/appicon-256.png',
+    '/app-images/appicon-512.png',
+    '/index.html',
+    '/fallback.html',
+    '/manifest.json',
+    '/cleancab.png',
+    '/styleph.css';
                 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
@@ -69,8 +69,8 @@ self.addEventListener("fetch", (event) =>
   if (event.request.mode === "navigate") 
   {
     event.respondWith(
-      caches.match('/cleancab-filter/index.html').then((cachedResponse) => 
-        cachedResponse || fetch(event.request).catch(() => caches.match('/cleancab-filter/index.html'))
+      caches.match('/index.html').then((cachedResponse) => 
+        cachedResponse || fetch(event.request).catch(() => caches.match('/index.html'))
       )
     );
     return;
@@ -84,7 +84,7 @@ self.addEventListener("fetch", (event) =>
       const requestUrl = new URL(event.request.url);
       const normalizedRequest = requestUrl.pathname;
 
-      if (normalizedRequest === '/cleancab-filter/serviceworker.js') {
+      if (normalizedRequest === '/serviceworker.js') {
         return fetch(event.request);
       }
 
@@ -109,7 +109,7 @@ self.addEventListener("fetch", (event) =>
         return response;
       } catch (error) {
         console.error("Fetching failed:", error);
-        return caches.match('/cleancab-filter/fallback.html').then((fallback) =>
+        return caches.match('/fallback.html').then((fallback) =>
             fallback || new Response("Offline", { status: 503 })
         );
       }

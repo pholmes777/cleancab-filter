@@ -50,7 +50,7 @@
   <h3>Connection</h3>
   <div class="container">
     <div class="row">
-        <p id="connectingVersion">Cleancab Filter App Version: 1.012</p>
+        <p id="connectingVersion">Cleancab Filter App Version: 1.01</p>
     </div>
     <div class="row">
       <div style="width: 100%;height: 150px;background-image: url('cleancab.png'); background-repeat: no-repeat; background-size: contain; background-position: center;">
@@ -612,7 +612,7 @@ if (urlParams.get('source') === 'twa') {
 
 if ('serviceWorker' in navigator) 
 {
-  navigator.serviceWorker.register('serviceworker.js', {scope: '/cleancab-filter/'})
+  navigator.serviceWorker.register('serviceworker.js', {scope: '/'})
     .then(function(registration) 
     {
         console.log('ServiceWorker registration successful!');

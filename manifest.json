@@ -3,9 +3,9 @@
   "short_name": "CleanCab Filter",
   "description": "Monitor and Configure your CleanCab Filter Monitor",
   "id": "/cleancab-filter",
-  "start_url": "/cleancab-filter/index.html",
+  "start_url": "/index.html",
   "display": "standalone",
-  "scope": "/cleancab-filter/",
+  "scope": "/",
   "background_color": "#000000",
   "theme_color": "#0f4a73",
   "icons": [
